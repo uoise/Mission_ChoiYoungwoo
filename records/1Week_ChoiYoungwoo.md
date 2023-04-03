@@ -4,12 +4,12 @@
 
 ---
 
-- [ ] `likeablePerson` delete
-  - [ ] testcase 
-  - [ ] findById
-  - [ ] delete
-  - [ ] service
-  - [ ] controller
+- [x] `likeablePerson` delete
+  - [x] testcase 
+  - [x] findById
+  - [x] delete
+  - [x] service
+  - [x] controller
 - [ ] Google Oauth
 
 ### N주차 미션 요약
