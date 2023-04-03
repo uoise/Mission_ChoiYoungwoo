@@ -9,9 +9,11 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -58,5 +60,16 @@ public class LikeablePersonController {
         }
 
         return "usr/likeablePerson/list";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
+        if (findLikeablePersonRs.isFail())
+            return rq.redirectWithMsg("/likeablePerson/list", findLikeablePersonRs.getMsg());
+
+        RsData<Boolean> deleteLikeablePersonRs = likeablePersonService.delete(findLikeablePersonRs.getData(), rq.getMember());
+        return rq.redirectWithMsg("/likeablePerson/list", deleteLikeablePersonRs.getMsg());
     }
 }
