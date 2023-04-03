@@ -1,10 +1,7 @@
 package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
-import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,8 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class LikeablePersonControllerTests {
     @Autowired
     private MockMvc mvc;
-    @Autowired
-    private LikeablePersonRepository likeablePersonRepository;
     @Autowired
     private LikeablePersonService likeablePersonService;
 
@@ -85,7 +81,6 @@ class LikeablePersonControllerTests {
                 .andExpect(content().string(containsString("""
                         <input type="submit" value="추가"
                         """.stripIndent().trim())));
-        ;
     }
 
     @Test
@@ -106,7 +101,6 @@ class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("add"))
                 .andExpect(status().is3xxRedirection());
-        ;
     }
 
     @Test
@@ -127,7 +121,6 @@ class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("add"))
                 .andExpect(status().is3xxRedirection());
-        ;
     }
 
     @Test
