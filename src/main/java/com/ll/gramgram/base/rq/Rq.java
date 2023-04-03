@@ -34,8 +34,8 @@ public class Rq {
         // 현재 로그인한 회원의 인증정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication.getPrincipal() instanceof User) {
-            this.user = (User) authentication.getPrincipal();
+        if (authentication.getPrincipal() instanceof User principalUser) {
+            this.user = principalUser;
         } else {
             this.user = null;
         }
