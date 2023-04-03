@@ -1,6 +1,11 @@
 package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.ll.gramgram.base.rsData.RsData;
+import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
+import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
+import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +28,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
-public class LikeablePersonControllerTests {
+class LikeablePersonControllerTests {
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private LikeablePersonRepository likeablePersonRepository;
+    @Autowired
+    private LikeablePersonService likeablePersonService;
 
     @Test
     @DisplayName("등록 폼(인스타 인증을 안해서 폼 대신 메세지)")
@@ -147,6 +156,24 @@ public class LikeablePersonControllerTests {
                 .andExpect(content().string(containsString("""
                         <span class="toInstaMember_attractiveTypeDisplayName">성격</span>
                         """.stripIndent().trim())));
-        ;
+    }
+
+    @Test
+    @DisplayName("likeable delete")
+    @WithUserDetails("KAKAO__2733144890")
+    void t006() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(get("/likeablePerson/delete/4"))
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().is3xxRedirection());
+
+        RsData<LikeablePerson> likeablePersonRsData = likeablePersonService.findById(4L);
+        assertThat(likeablePersonRsData.getData()).isNull();
     }
 }
