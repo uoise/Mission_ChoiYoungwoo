@@ -13,6 +13,7 @@
 - [x] Google Oauth
   - [x] generate google project
   - [x] add `registration.google` at `oauth.yml`
+  - [x] oauth icons
 
 ### N주차 미션 요약
 
