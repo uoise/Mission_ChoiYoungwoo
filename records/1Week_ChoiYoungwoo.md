@@ -10,12 +10,16 @@
   - [x] delete
   - [x] service
   - [x] controller
-- [ ] Google Oauth
+- [x] Google Oauth
+  - [x] generate google project
+  - [x] add `registration.google` at `oauth.yml`
 
 ### N주차 미션 요약
 
 ---
 
+- reference
+  - [connect google oauth to spring](https://lotuus.tistory.com/79)
 
 **[특이사항]**
 
