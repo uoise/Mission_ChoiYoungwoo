@@ -1,0 +1,21 @@
+spring:
+  config:
+    import:
+    - config/datasource.yml
+    - config/oauth.yml
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+logging:
+  level:
+    root: INFO
+    com.ll.gramgram_ai: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.extract: TRACE
