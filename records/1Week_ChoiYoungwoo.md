@@ -23,7 +23,7 @@
   - [ ] `fromMember` must like `toMember` only once
     - [x] testcase
     - [ ] delete and create `likeablePerson`
-    - [ ] modify exist `likeablePerson`
+    - [x] modify exist `likeablePerson`
   - [ ] `fromMember` must `like` less than 11
     - [ ] testcase 
     - [ ] `count(*)` from `likeablePerson` where `fromMemberId` = `?`;
