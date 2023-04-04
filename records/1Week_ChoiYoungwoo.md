@@ -21,7 +21,7 @@
   - [ ] oauth testcase
 - [ ] `likeablePerson` constraints
   - [ ] `fromMember` must like `toMember` only once
-    - [ ] testcase
+    - [x] testcase
     - [ ] delete and create `likeablePerson`
     - [ ] modify exist `likeablePerson`
   - [ ] `fromMember` must `like` less than 11
