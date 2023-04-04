@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc // http 요청, 응답 테스트
 @Transactional // 실제로 테스트에서 발생한 DB 작업이 영구적으로 적용되지 않도록, test + 트랜잭션 => 자동롤백
 @ActiveProfiles("test") // application-test.yml 을 활성화 시킨다.
-public class MemberControllerTests {
+class MemberControllerTests {
     @Autowired
     private MockMvc mvc;
     @Autowired
@@ -68,7 +68,7 @@ public class MemberControllerTests {
         ResultActions resultActions = mvc
                 .perform(post("/member/join")
                         .with(csrf()) // CSRF 키 생성
-                        .param("username", "user10")
+                        .param("username", "user99")
                         .param("password", "1234")
                 )
                 .andDo(print());
