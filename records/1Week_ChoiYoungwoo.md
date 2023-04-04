@@ -22,14 +22,14 @@
 - [ ] `likeablePerson` constraints
   - [ ] `fromMember` must like `toMember` only once
     - [ ] testcase
-    - [ ] delete and create `likeable`
-    - [ ] modify exist `likeable`
+    - [ ] delete and create `likeablePerson`
+    - [ ] modify exist `likeablePerson`
   - [ ] `fromMember` must `like` less than 11
     - [ ] testcase 
     - [ ] `count(*)` from `likeablePerson` where `fromMemberId` = `?`;
 - [ ] `@PreAuthorize` exception 
+  - [ ] testcase
   - [ ] custom handler
-    - [ ] testcase
     - [ ] 4xx page custom
     - [ ] `redirect:/`
     - [ ] redirect to browser recent page
