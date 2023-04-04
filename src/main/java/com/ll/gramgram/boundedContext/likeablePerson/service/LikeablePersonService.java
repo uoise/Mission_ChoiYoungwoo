@@ -64,4 +64,38 @@ public class LikeablePersonService {
         likeablePersonRepository.delete(likeablePerson);
         return RsData.of("S-1", "호감상대를 삭제했습니다.", Boolean.TRUE);
     }
+
+    // 해당 인스타 멤버의 호감상대 개수
+    public Long countByMember(InstaMember fromInstaMember) {
+        return likeablePersonRepository.countByFromInstaMemberId(fromInstaMember.getId());
+    }
+
+    public RsData<LikeablePerson> findByFromInstaMemberAndToInstaMember(InstaMember fromInstaMember, InstaMember toInstaMember) {
+        return RsData.successOf(likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId()).orElse(null));
+    }
+
+    @Transactional
+    public RsData<LikeablePerson> modifyAttractive(Long likeableId, int attractiveTypeCode) {
+        LikeablePerson likeablePerson = likeablePersonRepository.findById(likeableId).orElse(null);
+        if (likeablePerson == null) {
+            return RsData.of("F-1", "유효한 호감표시가 아닙니다.");
+        }
+
+        // need setter or DTO
+        likeablePerson = LikeablePerson
+                .builder()
+                .id(likeablePerson.getId())
+                .createDate(likeablePerson.getCreateDate())
+                .fromInstaMember(likeablePerson.getFromInstaMember())
+                .fromInstaMemberUsername(likeablePerson.getFromInstaMemberUsername())
+                .toInstaMember(likeablePerson.getToInstaMember())
+                .toInstaMemberUsername(likeablePerson.getToInstaMemberUsername())
+                .attractiveTypeCode(attractiveTypeCode) // actual change
+                .build();
+
+        likeablePersonRepository.save(likeablePerson);
+
+        return RsData.of("S-1", "입력하신 인스타유저(%s)의 매력포인트를 변경했습니다.".formatted(likeablePerson.getToInstaMember()), likeablePerson);
+    }
+
 }
