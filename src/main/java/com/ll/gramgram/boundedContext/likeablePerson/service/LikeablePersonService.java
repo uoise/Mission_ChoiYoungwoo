@@ -56,8 +56,8 @@ public class LikeablePersonService {
     }
 
     @Transactional
-    public RsData<Boolean> delete(LikeablePerson likeablePerson, Member fromInstaMember) {
-        if (!likeablePerson.getFromInstaMember().getId().equals(fromInstaMember.getInstaMember().getId()))
+    public RsData<Boolean> delete(LikeablePerson likeablePerson, InstaMember fromInstaMember) {
+        if (!likeablePerson.getFromInstaMember().getId().equals(fromInstaMember.getId())) {
             return RsData.of("F-1", "호감상대를 삭제할 권한이 없습니다.", Boolean.FALSE);
         }
 
