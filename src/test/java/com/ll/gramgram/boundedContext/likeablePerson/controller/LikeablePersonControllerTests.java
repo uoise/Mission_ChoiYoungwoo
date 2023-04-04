@@ -1,8 +1,12 @@
 package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
 import com.ll.gramgram.base.rsData.RsData;
+import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
+import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
+import com.ll.gramgram.boundedContext.member.entity.Member;
+import com.ll.gramgram.boundedContext.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class LikeablePersonControllerTests {
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private InstaMemberService instaMemberService;
     @Autowired
     private LikeablePersonService likeablePersonService;
 
@@ -168,5 +176,32 @@ class LikeablePersonControllerTests {
 
         RsData<LikeablePerson> likeablePersonRsData = likeablePersonService.findById(4L);
         assertThat(likeablePersonRsData.getData()).isNull();
+    }
+
+    @Test
+    @DisplayName("likeablePerson modify")
+    @WithUserDetails("KAKAO__2733144890")
+    void t007() throws Exception {
+        Member fromMember = memberService.findByUsername("KAKAO__2733144890").get();
+        Member toMember = memberService.findByUsername("user2").get();
+        InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).get();
+        InstaMember toInstaMember = instaMemberService.findByUsername(toMember.getInstaMember().getUsername()).get();
+        LikeablePerson likeablePerson = likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData();
+        int curAttractiveTypeCode = likeablePerson.getAttractiveTypeCode();
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/modify/%d".formatted(likeablePerson.getId()))
+                        .with(csrf()) // CSRF 키 생성
+                        .param("attractiveTypeCode", String.valueOf((curAttractiveTypeCode + 2) % 3))
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("modify"))
+                .andExpect(status().is3xxRedirection())
+        ;
+        assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData().getAttractiveTypeCode()).isEqualTo((curAttractiveTypeCode + 2) % 3);
     }
 }
