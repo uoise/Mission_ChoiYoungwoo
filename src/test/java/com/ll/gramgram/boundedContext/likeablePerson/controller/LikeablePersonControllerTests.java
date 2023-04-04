@@ -152,7 +152,7 @@ class LikeablePersonControllerTests {
     }
 
     @Test
-    @DisplayName("likeable delete")
+    @DisplayName("likeablePerson delete")
     @WithUserDetails("KAKAO__2733144890")
     void t006() throws Exception {
         // WHEN
