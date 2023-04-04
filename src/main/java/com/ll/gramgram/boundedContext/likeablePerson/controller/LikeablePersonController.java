@@ -5,6 +5,7 @@ import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
+import com.ll.gramgram.boundedContext.member.entity.Member;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -65,11 +66,17 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
-        RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
-        if (findLikeablePersonRs.isFail())
-            return rq.redirectWithMsg("/likeablePerson/list", findLikeablePersonRs.getMsg());
+        Member member = rq.getMember();
+        if (!member.hasConnectedInstaMember()) {
+            return rq.redirectWithMsg("/likeablePerson/list", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
+        }
 
-        RsData<Boolean> deleteLikeablePersonRs = likeablePersonService.delete(findLikeablePersonRs.getData(), rq.getMember());
+        RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
+        if (findLikeablePersonRs.isFail()) {
+            return rq.redirectWithMsg("/likeablePerson/list", findLikeablePersonRs.getMsg());
+        }
+
+        RsData<Boolean> deleteLikeablePersonRs = likeablePersonService.delete(findLikeablePersonRs.getData(), member.getInstaMember());
         return rq.redirectWithMsg("/likeablePerson/list", deleteLikeablePersonRs.getMsg());
     }
 }

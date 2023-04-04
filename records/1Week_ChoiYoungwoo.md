@@ -44,3 +44,9 @@
 **[특이사항]**
 
 ---
+- `LikeablePersonService`
+- 기존안 `public RsData<Boolean> delete(LikeablePerson likeablePerson, Member fromMember)`
+  - 장점: `fromMember` 와 `fromInstaMember` 가 동일한지 검증 
+  - 단점: `LikeablePersonService` 에서 `Member` 사용
+- 개선안 `public RsData<Boolean> delete(LikeablePerson likeablePerson, InstaMember fromInstaMember)`
+  - 장점: `InstaMember` 를 사용해 삭제 로직만을 수행
