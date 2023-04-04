@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -57,7 +58,7 @@ public class Rq {
 
         // 데이터가 없는지 체크
         if (member == null) {
-            member = memberService.findByUsername(user.getUsername()).orElseThrow();
+            member = memberService.findByUsername(user.getUsername()).orElseThrow(() -> new UsernameNotFoundException("username(%s)를 찾을수 없습니다".formatted(user.getUsername())));
         }
 
         return member;
