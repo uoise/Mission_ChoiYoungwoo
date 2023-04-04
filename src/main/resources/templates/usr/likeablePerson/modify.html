@@ -1,0 +1,61 @@
+<html layout:decorate="~{usr/layout/layout.html}">
+
+<head>
+    <title>매력포인트 변경하기</title>
+</head>
+
+<body>
+
+<mai layout:fragment="main">
+    <th:block th:if="${@rq.member.hasConnectedInstaMember}">
+        <script th:inline="javascript">
+            function ModifyForm__submit(form) {
+                const $checkedAttractiveTypeCodeRadioButton = $(form).find("[name=attractiveTypeCode]:checked");
+
+                if ($checkedAttractiveTypeCodeRadioButton.length === 0) {
+                    toastWarning('상대방의 매력포인트를 선택해주세요.');
+                    $(form).find("[name=attractiveTypeCode]:first").focus();
+                    return;
+                }
+
+                form.submit(); // 폼 발송
+            }
+        </script>
+
+        <form th:action method="POST" class="p-10 max-w-sm flex flex-col gap-4"
+              onsubmit="ModifyForm__submit(this); return false;">
+            <div>
+                당신의 인스타ID : <span class="badge" th:text="${likeablePerson.fromInstaMemberUsername}"></span>
+            </div>
+            <div>
+                상대의 인스타ID : <span class="badge" th:text="${likeablePerson.toInstaMemberUsername}"></span>
+            </div>
+            <div>
+                <div class="form-control">
+                    <label class="label cursor-pointer">
+                        <span class="label-text">외모</span>
+                        <input type="radio" name="attractiveTypeCode" value="1" class="radio focus:bg-red-100" th:checked="${likeablePerson.attractiveTypeCode == 1}">
+                    </label>
+                </div>
+                <div class="form-control">
+                    <label class="label cursor-pointer">
+                        <span class="label-text">성격</span>
+                        <input type="radio" name="attractiveTypeCode" value="2" class="radio focus:bg-red-100" th:checked="${likeablePerson.attractiveTypeCode == 2}">
+                    </label>
+                </div>
+                <div class="form-control">
+                    <label class="label cursor-pointer">
+                        <span class="label-text">능력</span>
+                        <input type="radio" name="attractiveTypeCode" value="3" class="radio focus:bg-red-100" th:checked="${likeablePerson.attractiveTypeCode == 3}">
+                    </label>
+                </div>
+            </div>
+            <div>
+                <input type="submit" value="변경" class="btn btn-primary">
+            </div>
+        </form>
+    </th:block>
+</mai>
+</body>
+
+</html>

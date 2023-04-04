@@ -79,4 +79,45 @@ public class LikeablePersonController {
         RsData<Boolean> deleteLikeablePersonRs = likeablePersonService.delete(findLikeablePersonRs.getData(), member.getInstaMember());
         return rq.redirectWithMsg("/likeablePerson/list", deleteLikeablePersonRs.getMsg());
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{id}")
+    public String modify(@PathVariable Long id, Model model) {
+        Member member = rq.getMember();
+        if (!member.hasConnectedInstaMember()) {
+            return rq.redirectWithMsg("/likeablePerson/list", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
+        }
+
+        RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
+        if (findLikeablePersonRs.isFail()) {
+            return rq.redirectWithMsg("/likeablePerson/list", findLikeablePersonRs.getMsg());
+        }
+
+        LikeablePerson likeablePerson = findLikeablePersonRs.getData();
+        if (!member.getInstaMember().getId().equals(likeablePerson.getFromInstaMember().getId())) {
+            return rq.redirectWithMsg("/likeablePerson/list", "잘못된 접근입니다.");
+        }
+
+        model.addAttribute("likeablePerson", likeablePerson);
+        return "usr/likeablePerson/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{id}")
+    public String modify(@PathVariable Long id, @Valid AddForm addForm) {
+//        Member member = rq.getMember();
+//
+//        RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
+//        if (findLikeablePersonRs.isFail()) {
+//            return rq.redirectWithMsg("/likeablePerson/list", findLikeablePersonRs.getMsg());
+//        }
+//
+//        LikeablePerson likeablePerson = findLikeablePersonRs.getData();
+//        if (!member.getInstaMember().getId().equals(likeablePerson.getFromInstaMember().getId())) {
+//            return rq.redirectWithMsg("/likeablePerson/list", "잘못된 접근입니다.");
+//        }
+
+        RsData<LikeablePerson> deleteLikeablePersonRs = likeablePersonService.modifyAttractive(id, addForm.getAttractiveTypeCode());
+        return rq.redirectWithMsg("/likeablePerson/list", deleteLikeablePersonRs.getMsg());
+    }
 }
