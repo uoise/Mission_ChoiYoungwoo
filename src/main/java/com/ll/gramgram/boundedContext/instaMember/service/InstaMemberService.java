@@ -15,6 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class InstaMemberService {
+    private final static String CONNECT_SUCCESS_MESSAGE = "인스타계정이 등록되었습니다.";
     private final InstaMemberRepository instaMemberRepository;
     private final MemberService memberService;
 
@@ -53,17 +54,14 @@ public class InstaMemberService {
 
         instaMemberRepository.save(instaMember);
 
-        return RsData.of("S-1", "인스타계정이 등록되었습니다.", instaMember);
+        return RsData.of("S-1", CONNECT_SUCCESS_MESSAGE, instaMember);
     }
 
     @Transactional
     public RsData<InstaMember> findByUsernameOrCreate(String username) {
         Optional<InstaMember> opInstaMember = findByUsername(username);
 
-        if (opInstaMember.isPresent()) return RsData.of("S-2", "인스타계정이 등록되었습니다.", opInstaMember.get());
-
-        // 아직 성별을 알 수 없으니, 언노운의 의미로 U 넣음
-        return create(username, "U");
+        return opInstaMember.map(instaMember -> RsData.of("S-2", CONNECT_SUCCESS_MESSAGE, instaMember)).orElseGet(() -> create(username, "U"));
     }
 
     @Transactional
@@ -77,7 +75,7 @@ public class InstaMemberService {
             instaMemberRepository.save(instaMember); // 저장
 
             // 기존 인스타회원이랑 연결
-            return RsData.of("S-2", "인스타계정이 등록되었습니다.", instaMember);
+            return RsData.of("S-2", CONNECT_SUCCESS_MESSAGE, instaMember);
         }
 
         // 생성
