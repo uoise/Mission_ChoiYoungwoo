@@ -13,15 +13,34 @@
 - [x] Google Oauth
   - [x] generate google project
   - [x] add `registration.google` at `oauth.yml`
-  - [x] oauth icons
 
-### N주차 미션 요약
+---
+### 보완점
+- [ ] Oauth
+  - [x] oauth icons
+  - [ ] oauth testcase
+- [ ] `likeablePerson` constraints
+  - [ ] `fromMember` must like `toMember` only once
+    - [ ] testcase
+    - [ ] delete and create `likeable`
+    - [ ] modify exist `likeable`
+  - [ ] `fromMember` must `like` less than 11
+    - [ ] testcase 
+    - [ ] `count(*)` from `likeablePerson` where `fromMemberId` = `?`;
+- [ ] `@PreAuthorize` exception 
+  - [ ] custom handler
+    - [ ] testcase
+    - [ ] 4xx page custom
+    - [ ] `redirect:/`
+    - [ ] redirect to browser recent page
+### 1주차 미션 요약
 
 ---
 
 - reference
   - [connect google oauth to spring](https://lotuus.tistory.com/79)
+  - [batch insert for IDENTITY generation](https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#identifiers-generators-identity)
 
 **[특이사항]**
 
---- 
+---
