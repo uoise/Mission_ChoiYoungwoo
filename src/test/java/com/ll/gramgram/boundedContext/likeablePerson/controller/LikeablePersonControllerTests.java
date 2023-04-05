@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -195,7 +194,7 @@ class LikeablePersonControllerTests {
 
         LikeablePerson likeablePerson = likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData();
         int curAttractiveTypeCode = likeablePerson.getAttractiveTypeCode();
-        
+
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/likeablePerson/modify/%d".formatted(likeablePerson.getId()))
