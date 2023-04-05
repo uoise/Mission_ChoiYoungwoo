@@ -204,4 +204,33 @@ class LikeablePersonControllerTests {
         ;
         assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData().getAttractiveTypeCode()).isEqualTo((curAttractiveTypeCode + 2) % 3);
     }
+
+    @Test
+    @DisplayName("fromMember must like toMember only once")
+    @WithUserDetails("KAKAO__2733144890")
+    void t008() throws Exception {
+        Member fromMember = memberService.findByUsername("KAKAO__2733144890").get();
+        Member toMember = memberService.findByUsername("user2").get();
+
+        InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).get();
+        InstaMember toInstaMember = instaMemberService.findByUsername(toMember.getInstaMember().getUsername()).get();
+
+        assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).
+                getData()).isNotNull();
+
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param(fromMember.getUsername(), toInstaMember.getUsername())
+                        .param("attractiveTypeCode", "1")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is4xxClientError());
+    }
 }
