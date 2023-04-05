@@ -31,6 +31,9 @@ public class LikeablePersonService {
         }
 
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
+        if (likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(member.getInstaMember().getId(), toInstaMember.getId()).isPresent()) {
+            return RsData.of("F-1", "이미 등록한 호감상대 입니다.");
+        }
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()

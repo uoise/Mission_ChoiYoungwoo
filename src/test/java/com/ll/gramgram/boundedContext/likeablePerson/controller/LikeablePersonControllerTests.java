@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -182,12 +183,19 @@ class LikeablePersonControllerTests {
     @DisplayName("likeablePerson modify")
     @WithUserDetails("KAKAO__2733144890")
     void t007() throws Exception {
-        Member fromMember = memberService.findByUsername("KAKAO__2733144890").get();
-        Member toMember = memberService.findByUsername("user2").get();
-        InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).get();
-        InstaMember toInstaMember = instaMemberService.findByUsername(toMember.getInstaMember().getUsername()).get();
+        Member fromMember = memberService.findByUsername("KAKAO__2733144890").orElse(null);
+        Member toMember = memberService.findByUsername("user2").orElse(null);
+        assertThat(fromMember).isNotNull();
+        assertThat(toMember).isNotNull();
+
+        InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).orElse(null);
+        InstaMember toInstaMember = instaMemberService.findByUsername(toMember.getInstaMember().getUsername()).orElse(null);
+        assertThat(fromInstaMember).isNotNull();
+        assertThat(toInstaMember).isNotNull();
+
         LikeablePerson likeablePerson = likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData();
         int curAttractiveTypeCode = likeablePerson.getAttractiveTypeCode();
+        
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/likeablePerson/modify/%d".formatted(likeablePerson.getId()))
@@ -209,20 +217,25 @@ class LikeablePersonControllerTests {
     @DisplayName("fromMember must like toMember only once")
     @WithUserDetails("KAKAO__2733144890")
     void t008() throws Exception {
-        Member fromMember = memberService.findByUsername("KAKAO__2733144890").get();
-        Member toMember = memberService.findByUsername("user2").get();
+        Member fromMember = memberService.findByUsername("KAKAO__2733144890").orElse(null);
+        Member toMember = memberService.findByUsername("user2").orElse(null);
+        assertThat(fromMember).isNotNull();
+        assertThat(toMember).isNotNull();
 
-        InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).get();
-        InstaMember toInstaMember = instaMemberService.findByUsername(toMember.getInstaMember().getUsername()).get();
+        InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).orElse(null);
+        InstaMember toInstaMember = instaMemberService.findByUsername(toMember.getInstaMember().getUsername()).orElse(null);
+        assertThat(fromInstaMember).isNotNull();
+        assertThat(toInstaMember).isNotNull();
 
-        assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).
-                getData()).isNotNull();
+        LikeablePerson likeablePerson = likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData();
+        assertThat(likeablePerson).isNotNull();
 
+        long beforeAddCount = likeablePersonService.countByMember(fromInstaMember);
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/likeablePerson/add")
                         .with(csrf()) // CSRF 키 생성
-                        .param(fromMember.getUsername(), toInstaMember.getUsername())
+                        .param("username", toInstaMember.getUsername())
                         .param("attractiveTypeCode", "1")
                 )
                 .andDo(print());
@@ -231,6 +244,8 @@ class LikeablePersonControllerTests {
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("add"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is2xxSuccessful());
+
+        assertThat(likeablePersonService.countByMember(fromInstaMember)).isEqualTo(beforeAddCount);
     }
 }
