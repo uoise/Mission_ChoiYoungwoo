@@ -20,7 +20,7 @@
   - [x] oauth icons
   - [ ] oauth testcase
 - [ ] `likeablePerson` constraints
-  - [ ] `fromMember` must like `toMember` only once
+  - [X] `fromMember` must like `toMember` only once
     - [x] testcase
     - [ ] delete and create `likeablePerson`
     - [x] modify exist `likeablePerson`
@@ -50,3 +50,4 @@
   - 단점: `LikeablePersonService` 에서 `Member` 사용
 - 개선안 `public RsData<Boolean> delete(LikeablePerson likeablePerson, InstaMember fromInstaMember)`
   - 장점: `InstaMember` 를 사용해 삭제 로직만을 수행
+- 서비스는 요청 실패 리턴, HttpStatusCode 2xx 리턴
