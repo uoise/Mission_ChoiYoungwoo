@@ -22,7 +22,8 @@
 - [x] Oauth
   - [x] oauth icons
 - [ ] `likeablePerson` constraints
-  - [X] `fromMember` must like `toMember` only once
+  - [ ] change `attractiveTypeCode` to enum `attractiveTypeCode`
+  - [x] `fromMember` must like `toMember` only once
     - [x] testcase
     - [x] modify exist `likeablePerson`
   - [ ] `fromMember` must `like` less than **LIMIT**
