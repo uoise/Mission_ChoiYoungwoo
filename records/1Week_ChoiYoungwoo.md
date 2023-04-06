@@ -60,3 +60,5 @@
 - OAuth TestCase
   - Mocking 객체 활용해야 함
   - 진행하지 않음
+- Html TestCase
+  - `add.html` 의 `attractiveType` 의 `class` 속성으로 실패함
