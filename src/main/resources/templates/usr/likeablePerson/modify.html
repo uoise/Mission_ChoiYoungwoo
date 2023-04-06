@@ -31,25 +31,15 @@
                 상대의 인스타ID : <span class="badge" th:text="${likeablePerson.toInstaMemberUsername}"></span>
             </div>
             <div>
-                <div class="form-control">
+                <div class="form-control" th:each="attractiveType : ${attractiveTypes}">
                     <label class="label cursor-pointer">
-                        <span class="label-text">외모</span>
-                        <input type="radio" name="attractiveTypeCode" value="1" class="radio focus:bg-red-100" th:checked="${likeablePerson.attractiveTypeCode == 1}">
+                        <span class="label-text" th:text="${attractiveType.value}"></span>
+                        <input class="radio focus:bg-red-100" name="attractiveTypeCode"
+                               th:checked="${attractiveType == likeablePerson.attractiveType}"
+                               th:value="${attractiveType.code}"
+                               type="radio">
                     </label>
                 </div>
-                <div class="form-control">
-                    <label class="label cursor-pointer">
-                        <span class="label-text">성격</span>
-                        <input type="radio" name="attractiveTypeCode" value="2" class="radio focus:bg-red-100" th:checked="${likeablePerson.attractiveTypeCode == 2}">
-                    </label>
-                </div>
-                <div class="form-control">
-                    <label class="label cursor-pointer">
-                        <span class="label-text">능력</span>
-                        <input type="radio" name="attractiveTypeCode" value="3" class="radio focus:bg-red-100" th:checked="${likeablePerson.attractiveTypeCode == 3}">
-                    </label>
-                </div>
-            </div>
             <div>
                 <input type="submit" value="변경" class="btn btn-primary">
             </div>

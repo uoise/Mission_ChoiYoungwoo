@@ -3,6 +3,7 @@ package com.ll.gramgram.boundedContext.likeablePerson.controller;
 import com.ll.gramgram.base.rq.Rq;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
+import com.ll.gramgram.boundedContext.likeablePerson.entity.AttractiveType;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import com.ll.gramgram.boundedContext.member.entity.Member;
@@ -25,7 +26,9 @@ public class LikeablePersonController {
     private final LikeablePersonService likeablePersonService;
 
     @GetMapping("/add")
-    public String showAdd() {
+    public String showAdd(Model model) {
+        model.addAttribute("attractiveTypes", AttractiveType.values());
+
         return "usr/likeablePerson/add";
     }
 
@@ -38,8 +41,13 @@ public class LikeablePersonController {
 
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
-        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
+        AttractiveType attractiveType = AttractiveType.findByCode(addForm.getAttractiveTypeCode());
+        if (attractiveType == null) {
+            // need to change
+            return rq.historyBack(RsData.failOf(null));
+        }
 
+        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), attractiveType);
         if (createRsData.isFail()) {
             return rq.historyBack(createRsData);
         }
@@ -100,12 +108,18 @@ public class LikeablePersonController {
         }
 
         model.addAttribute("likeablePerson", likeablePerson);
+        model.addAttribute("attractiveTypes", AttractiveType.values());
         return "usr/likeablePerson/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String modify(@PathVariable Long id, @Valid AddForm addForm) {
+        AttractiveType attractiveType = AttractiveType.findByCode(addForm.getAttractiveTypeCode());
+        if (attractiveType == null) {
+            // need to change
+            return rq.historyBack(RsData.failOf(null));
+        }
 //        Member member = rq.getMember();
 //
 //        RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
@@ -118,7 +132,7 @@ public class LikeablePersonController {
 //            return rq.redirectWithMsg("/likeablePerson/list", "잘못된 접근입니다.");
 //        }
 
-        RsData<LikeablePerson> deleteLikeablePersonRs = likeablePersonService.modifyAttractive(id, addForm.getAttractiveTypeCode());
+        RsData<LikeablePerson> deleteLikeablePersonRs = likeablePersonService.modifyAttractive(id, attractiveType);
         return rq.redirectWithMsg("/likeablePerson/list", deleteLikeablePersonRs.getMsg());
     }
 }

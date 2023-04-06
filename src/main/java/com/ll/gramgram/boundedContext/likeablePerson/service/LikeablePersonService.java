@@ -3,6 +3,7 @@ package com.ll.gramgram.boundedContext.likeablePerson.service;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
+import com.ll.gramgram.boundedContext.likeablePerson.entity.AttractiveType;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
@@ -21,7 +22,7 @@ public class LikeablePersonService {
     private final InstaMemberService instaMemberService;
 
     @Transactional
-    public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
+    public RsData<LikeablePerson> like(Member member, String username, AttractiveType attractiveType) {
         if (!member.hasConnectedInstaMember()) {
             return RsData.of("F-2", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
         }
@@ -41,7 +42,7 @@ public class LikeablePersonService {
                 .fromInstaMemberUsername(member.getInstaMember().getUsername()) // 중요하지 않음
                 .toInstaMember(toInstaMember) // 호감을 받는 사람의 인스타 멤버
                 .toInstaMemberUsername(toInstaMember.getUsername()) // 중요하지 않음
-                .attractiveTypeCode(attractiveTypeCode) // 1=외모, 2=능력, 3=성격
+                .attractiveType(attractiveType)
                 .build();
 
         likeablePersonRepository.save(likeablePerson); // 저장
@@ -78,7 +79,7 @@ public class LikeablePersonService {
     }
 
     @Transactional
-    public RsData<LikeablePerson> modifyAttractive(Long likeableId, int attractiveTypeCode) {
+    public RsData<LikeablePerson> modifyAttractive(Long likeableId, AttractiveType attractiveType) {
         LikeablePerson likeablePerson = likeablePersonRepository.findById(likeableId).orElse(null);
         if (likeablePerson == null) {
             return RsData.of("F-1", "유효한 호감표시가 아닙니다.");
@@ -93,7 +94,7 @@ public class LikeablePersonService {
                 .fromInstaMemberUsername(likeablePerson.getFromInstaMemberUsername())
                 .toInstaMember(likeablePerson.getToInstaMember())
                 .toInstaMemberUsername(likeablePerson.getToInstaMemberUsername())
-                .attractiveTypeCode(attractiveTypeCode) // actual change
+                .attractiveType(attractiveType) // actual change
                 .build();
 
         likeablePersonRepository.save(likeablePerson);
