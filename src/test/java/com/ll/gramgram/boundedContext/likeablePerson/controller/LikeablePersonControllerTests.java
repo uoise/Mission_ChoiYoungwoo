@@ -21,8 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -165,7 +164,10 @@ class LikeablePersonControllerTests {
     void t006() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
-                .perform(get("/likeablePerson/delete/4"))
+                .perform(
+                        delete("/likeablePerson/4")
+                                .with(csrf())
+                )
                 .andDo(print());
 
         // THEN
@@ -179,9 +181,31 @@ class LikeablePersonControllerTests {
     }
 
     @Test
+    @DisplayName("likeablePerson delete not valid")
+    @WithUserDetails("user4")
+    void t007() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(
+                        delete("/likeablePerson/4")
+                                .with(csrf())
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().is4xxClientError());
+
+        RsData<LikeablePerson> likeablePersonRsData = likeablePersonService.findById(4L);
+        assertThat(likeablePersonRsData.getData()).isNotNull();
+    }
+
+    @Test
     @DisplayName("likeablePerson modify")
     @WithUserDetails("KAKAO__2733144890")
-    void t007() throws Exception {
+    void t008() throws Exception {
         Member fromMember = memberService.findByUsername("KAKAO__2733144890").orElse(null);
         Member toMember = memberService.findByUsername("user2").orElse(null);
         assertThat(fromMember).isNotNull();
@@ -215,7 +239,7 @@ class LikeablePersonControllerTests {
     @Test
     @DisplayName("fromMember must like toMember only once")
     @WithUserDetails("KAKAO__2733144890")
-    void t008() throws Exception {
+    void t009() throws Exception {
         Member fromMember = memberService.findByUsername("KAKAO__2733144890").orElse(null);
         Member toMember = memberService.findByUsername("user2").orElse(null);
         assertThat(fromMember).isNotNull();
@@ -243,7 +267,7 @@ class LikeablePersonControllerTests {
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("add"))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is4xxClientError());
 
         assertThat(likeablePersonService.countByMember(fromInstaMember)).isEqualTo(beforeAddCount);
     }
