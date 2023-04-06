@@ -23,14 +23,16 @@ public class LikeablePerson {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime createDate;
     @LastModifiedDate
     private LocalDateTime modifyDate;
-
     @ManyToOne
+    @JoinColumn(nullable = false)
     private InstaMember fromInstaMember; // 호감을 표시한 사람(인스타 멤버)
     private String fromInstaMemberUsername; // 혹시 몰라서 기록
     @ManyToOne
+    @JoinColumn(nullable = false)
     private InstaMember toInstaMember; // 호감을 받은 사람(인스타 멤버)
     private String toInstaMemberUsername; // 혹시 몰라서 기록
     private int attractiveTypeCode; // 매력포인트(1=외모, 2=성격, 3=능력)
