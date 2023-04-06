@@ -3,6 +3,7 @@ package com.ll.gramgram.boundedContext.likeablePerson.controller;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
+import com.ll.gramgram.boundedContext.likeablePerson.entity.AttractiveType;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import com.ll.gramgram.boundedContext.member.entity.Member;
@@ -148,13 +149,13 @@ class LikeablePersonControllerTests {
                         <span class="toInstaMember_username">insta_user4</span>
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <span class="toInstaMember_attractiveTypeDisplayName">외모</span>
+                        <span class="toInstaMember_attractiveType_value">외모</span>
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
                         <span class="toInstaMember_username">insta_user100</span>
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <span class="toInstaMember_attractiveTypeDisplayName">성격</span>
+                        <span class="toInstaMember_attractiveType_value">능력</span>
                         """.stripIndent().trim())));
     }
 
@@ -217,13 +218,15 @@ class LikeablePersonControllerTests {
         assertThat(toInstaMember).isNotNull();
 
         LikeablePerson likeablePerson = likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData();
-        int curAttractiveTypeCode = likeablePerson.getAttractiveTypeCode();
+        AttractiveType curAttractiveType = likeablePerson.getAttractiveType();
+        AttractiveType nxtAttractiveType = AttractiveType.findByCode((curAttractiveType.getCode() + 2) % 3 + 1);
+        assertThat(nxtAttractiveType).isNotNull();
 
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/likeablePerson/modify/%d".formatted(likeablePerson.getId()))
                         .with(csrf()) // CSRF 키 생성
-                        .param("attractiveTypeCode", String.valueOf((curAttractiveTypeCode + 2) % 3 + 1))
+                        .param("attractiveTypeCode", String.valueOf(nxtAttractiveType.getCode()))
                 )
                 .andDo(print());
 
@@ -233,7 +236,7 @@ class LikeablePersonControllerTests {
                 .andExpect(handler().methodName("modify"))
                 .andExpect(status().is3xxRedirection())
         ;
-        assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData().getAttractiveTypeCode()).isEqualTo((curAttractiveTypeCode + 2) % 3 + 1);
+        assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData().getAttractiveType()).isEqualTo(nxtAttractiveType);
     }
 
     @Test

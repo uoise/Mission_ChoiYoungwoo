@@ -1,6 +1,7 @@
 package com.ll.gramgram.boundedContext.likeablePerson.entity;
 
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
+import com.ll.gramgram.boundedContext.likeablePerson.util.AttractiveTypeConverter;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,13 +36,7 @@ public class LikeablePerson {
     @JoinColumn(nullable = false)
     private InstaMember toInstaMember; // 호감을 받은 사람(인스타 멤버)
     private String toInstaMemberUsername; // 혹시 몰라서 기록
-    private int attractiveTypeCode; // 매력포인트(1=외모, 2=성격, 3=능력)
-
-    public String getAttractiveTypeDisplayName() {
-        return switch (attractiveTypeCode) {
-            case 1 -> "외모";
-            case 2 -> "성격";
-            default -> "능력";
-        };
-    }
+    @Convert(converter = AttractiveTypeConverter.class)
+    @Column(nullable = false)
+    private AttractiveType attractiveType;
 }

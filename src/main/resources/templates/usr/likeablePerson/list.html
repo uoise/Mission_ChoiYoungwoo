@@ -19,8 +19,8 @@
         <ul>
             <li th:each="likeablePerson: ${likeablePeople}">
                 <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span>
-                <span class="toInstaMember_attractiveTypeDisplayName"
-                      th:text="${likeablePerson.attractiveTypeDisplayName}"></span>
+                <span class="toInstaMember_attractiveType_value"
+                      th:text="${likeablePerson.attractiveType.value}"></span>
                 <a th:href="@{|modify/${likeablePerson.id}|}">수정</a>
                 <a href="javascript:;" onclick="if( confirm('정말로 삭제하시겠습니까?')) $(this).next().submit();">삭제</a>
                 <form hidden method="POST" th:action="@{|/likeablePerson/${likeablePerson.id}|}">

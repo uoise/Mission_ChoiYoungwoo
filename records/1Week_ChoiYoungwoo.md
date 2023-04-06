@@ -22,7 +22,7 @@
 - [x] Oauth
   - [x] oauth icons
 - [ ] `likeablePerson` constraints
-  - [ ] change `attractiveTypeCode` to enum `attractiveTypeCode`
+  - [x] change `attractiveTypeCode` to enum `attractiveTypeCode`
   - [x] `fromMember` must like `toMember` only once
     - [x] testcase
     - [x] modify exist `likeablePerson`
@@ -60,5 +60,3 @@
 - OAuth TestCase
   - Mocking 객체 활용해야 함
   - 진행하지 않음
-- 서비스는 요청 실패 리턴, HttpStatusCode 2xx 리턴
-  - `Rq` 에서 HttpStatus 추가 필요
