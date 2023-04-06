@@ -73,7 +73,7 @@ public class LikeablePersonController {
 
         RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
         if (findLikeablePersonRs.isFail()) {
-            return rq.redirectWithMsg("/likeablePerson/list", findLikeablePersonRs.getMsg());
+            return rq.historyBack(findLikeablePersonRs.getMsg());
         }
 
         RsData<Boolean> deleteLikeablePersonRs = likeablePersonService.delete(findLikeablePersonRs.getData(), member.getInstaMember());
