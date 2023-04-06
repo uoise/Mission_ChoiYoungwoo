@@ -223,7 +223,7 @@ class LikeablePersonControllerTests {
         ResultActions resultActions = mvc
                 .perform(post("/likeablePerson/modify/%d".formatted(likeablePerson.getId()))
                         .with(csrf()) // CSRF 키 생성
-                        .param("attractiveTypeCode", String.valueOf((curAttractiveTypeCode + 2) % 3))
+                        .param("attractiveTypeCode", String.valueOf((curAttractiveTypeCode + 2) % 3 + 1))
                 )
                 .andDo(print());
 
@@ -233,7 +233,7 @@ class LikeablePersonControllerTests {
                 .andExpect(handler().methodName("modify"))
                 .andExpect(status().is3xxRedirection())
         ;
-        assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData().getAttractiveTypeCode()).isEqualTo((curAttractiveTypeCode + 2) % 3);
+        assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData().getAttractiveTypeCode()).isEqualTo((curAttractiveTypeCode + 2) % 3 + 1);
     }
 
     @Test
