@@ -8,6 +8,7 @@
   - [x] testcase 
   - [x] findById
   - [x] delete
+  - [x] method DELETE
   - [x] service
   - [x] controller
 - [x] Google Oauth
@@ -17,6 +18,7 @@
 ---
 ### 보완점
 
+- [X] `historyBack` HttpStatusCode
 - [x] Oauth
   - [x] oauth icons
 - [ ] `likeablePerson` constraints
@@ -49,7 +51,7 @@
 
 - [connect google oauth to spring](https://lotuus.tistory.com/79)
 - [batch insert for IDENTITY generation](https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#identifiers-generators-identity)
-
+- [using PUT, DELETE at html form](https://jammdev.tistory.com/157)
 ### 특이사항
 
 ---
