@@ -6,7 +6,7 @@
 
 <body>
 
-<mai layout:fragment="main">
+<main layout:fragment="main">
     <th:block th:if="${@rq.member.hasConnectedInstaMember}">
         <script th:inline="javascript">
             function ModifyForm__submit(form) {
@@ -40,12 +40,12 @@
                                type="radio">
                     </label>
                 </div>
-            <div>
-                <input type="submit" value="변경" class="btn btn-primary">
-            </div>
+                <div>
+                    <input class="btn btn-primary" type="submit" value="변경">
+                </div>
         </form>
     </th:block>
-</mai>
+</main>
 </body>
 
 </html>
