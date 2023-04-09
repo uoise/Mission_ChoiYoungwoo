@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.home.controller;
 
+import com.ll.gramgram.base.rq.Rq;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import java.util.Enumeration;
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
+    private final Rq rq;
     @GetMapping("/")
     public String showMain() {
         return "usr/home/main";
@@ -25,9 +27,14 @@ public class HomeController {
         while (attributeNames.hasMoreElements()) {
             String attributeName = attributeNames.nextElement();
             Object attributeValue = session.getAttribute(attributeName);
-            sb.append(String.format("%s: %s\n", attributeName, attributeValue));
+            sb.append(attributeName).append(": ").append(attributeValue).append("\n");
         }
 
         return sb.toString().replaceAll("\n", "<br>");
+    }
+
+    @GetMapping("/historyBackTest")
+    public String showHistoryBackTest(HttpSession session) {
+        return rq.historyBack("Not Allowed");
     }
 }
