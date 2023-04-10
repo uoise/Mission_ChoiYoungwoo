@@ -274,4 +274,71 @@ class LikeablePersonControllerTests {
 
         assertThat(likeablePersonService.countByMember(fromInstaMember)).isEqualTo(beforeAddCount);
     }
+
+    @Test
+    @DisplayName("add method can modify exist likeablePerson")
+    @WithUserDetails("KAKAO__2733144890")
+    void t010() throws Exception {
+        Member fromMember = memberService.findByUsername("KAKAO__2733144890").orElseThrow();
+        Member toMember = memberService.findByUsername("user2").orElseThrow();
+
+        InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).orElseThrow();
+        InstaMember toInstaMember = instaMemberService.findByUsername(toMember.getInstaMember().getUsername()).orElseThrow();
+
+        LikeablePerson likeablePerson = likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData();
+        assertThat(likeablePerson).isNotNull();
+
+        AttractiveType newAttractiveType = AttractiveType.findByCode((likeablePerson.getAttractiveType().getCode() + 1) % 3 + 1);
+        assertThat(newAttractiveType).isNotNull();
+
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", toInstaMember.getUsername())
+                        .param("attractiveTypeCode", String.valueOf(newAttractiveType.getCode()))
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is3xxRedirection());
+
+        assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember)
+                .getData()
+                .getId()
+        ).isNotEqualTo(likeablePerson.getId());
+    }
+
+    @Test
+    @DisplayName("member must like less than LIMIT(11)")
+    @WithUserDetails("KAKAO__2733144890")
+    void t011() throws Exception {
+        Member fromMember = memberService.findByUsername("KAKAO__2733144890").orElseThrow();
+        InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).orElseThrow();
+
+        Long likeableCount = likeablePersonService.countByMember(fromInstaMember);
+
+        String testInstaUsername = "guess_who";
+        AttractiveType newAttractiveType = AttractiveType.ABILITY;
+
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", testInstaUsername)
+                        .param("attractiveTypeCode", String.valueOf(newAttractiveType.getCode()))
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is4xxClientError());
+
+        assertThat(likeablePersonService.countByMember(fromInstaMember)).isEqualTo(likeableCount);
+    }
 }
