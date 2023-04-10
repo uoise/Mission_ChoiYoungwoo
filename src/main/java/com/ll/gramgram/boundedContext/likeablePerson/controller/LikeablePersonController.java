@@ -61,7 +61,7 @@ public class LikeablePersonController {
 
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
-            List<LikeablePerson> likeablePeople = likeablePersonService.findByFromInstaMemberId(instaMember.getId());
+            List<LikeablePerson> likeablePeople = instaMember.getFromLikeablePeople();
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
@@ -81,7 +81,7 @@ public class LikeablePersonController {
             return rq.historyBack(findLikeablePersonRs.getMsg());
         }
 
-        RsData<Boolean> deleteLikeablePersonRs = likeablePersonService.delete(findLikeablePersonRs.getData(), member.getInstaMember());
+        RsData<Boolean> deleteLikeablePersonRs = likeablePersonService.delete(member, findLikeablePersonRs.getData());
         if (deleteLikeablePersonRs.isFail()) {
             return rq.historyBack(deleteLikeablePersonRs.getMsg());
         }
@@ -120,19 +120,19 @@ public class LikeablePersonController {
             // need to change
             return rq.historyBack(RsData.failOf(null));
         }
-//        Member member = rq.getMember();
-//
-//        RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
-//        if (findLikeablePersonRs.isFail()) {
-//            return rq.redirectWithMsg("/likeablePerson/list", findLikeablePersonRs.getMsg());
-//        }
-//
-//        LikeablePerson likeablePerson = findLikeablePersonRs.getData();
-//        if (!member.getInstaMember().getId().equals(likeablePerson.getFromInstaMember().getId())) {
-//            return rq.redirectWithMsg("/likeablePerson/list", "잘못된 접근입니다.");
-//        }
+        RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
+        if (findLikeablePersonRs.isFail()) {
+            return findLikeablePersonRs.getMsg();
+        }
 
-        RsData<LikeablePerson> deleteLikeablePersonRs = likeablePersonService.modifyAttractive(id, attractiveType);
+        LikeablePerson likeablePerson = findLikeablePersonRs.getData();
+        Member member = rq.getMember();
+        RsData<Boolean> canModRs = likeablePersonService.isYourLike(member, likeablePerson);
+        if (canModRs.isFail()) {
+            return canModRs.getMsg();
+        }
+
+        RsData<LikeablePerson> deleteLikeablePersonRs = likeablePersonService.modifyAttractive(likeablePerson, attractiveType);
         return rq.redirectWithMsg("/likeablePerson/list", deleteLikeablePersonRs.getMsg());
     }
 }

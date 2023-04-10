@@ -31,6 +31,7 @@ public class LikeablePersonService {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
 
+        InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
         if (likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(member.getInstaMember().getId(), toInstaMember.getId()).isPresent()) {
             return RsData.of("F-1", "이미 등록한 호감상대 입니다.");
@@ -38,7 +39,7 @@ public class LikeablePersonService {
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
-                .fromInstaMember(member.getInstaMember()) // 호감을 표시하는 사람의 인스타 멤버
+                .fromInstaMember(fromInstaMember) // 호감을 표시하는 사람의 인스타 멤버
                 .fromInstaMemberUsername(member.getInstaMember().getUsername()) // 중요하지 않음
                 .toInstaMember(toInstaMember) // 호감을 받는 사람의 인스타 멤버
                 .toInstaMemberUsername(toInstaMember.getUsername()) // 중요하지 않음
@@ -46,6 +47,9 @@ public class LikeablePersonService {
                 .build();
 
         likeablePersonRepository.save(likeablePerson); // 저장
+
+        fromInstaMember.addFromLikeablePerson(likeablePerson);
+        toInstaMember.addToLikeablePerson(likeablePerson);
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
@@ -59,10 +63,19 @@ public class LikeablePersonService {
         return likeablePerson.map(RsData::successOf).orElseGet(() -> RsData.of("F-1", "해당하는 호감상대를 찾을 수 없습니다.", null));
     }
 
+    public RsData<Boolean> isYourLike(Member member, LikeablePerson likeablePerson) {
+        if (!likeablePerson.getFromInstaMember().getId().equals(member.getInstaMember().getId())) {
+            return RsData.of("F-1", "해당 호감에 대한 권한이 없습니다.", Boolean.FALSE);
+        }
+        return RsData.successOf(Boolean.TRUE);
+    }
+
+
     @Transactional
-    public RsData<Boolean> delete(LikeablePerson likeablePerson, InstaMember fromInstaMember) {
-        if (!likeablePerson.getFromInstaMember().getId().equals(fromInstaMember.getId())) {
-            return RsData.of("F-1", "호감상대를 삭제할 권한이 없습니다.", Boolean.FALSE);
+    public RsData<Boolean> delete(Member member, LikeablePerson likeablePerson) {
+        RsData<Boolean> rsData = isYourLike(member, likeablePerson);
+        if (rsData.getData().equals(false)) {
+            return rsData;
         }
 
         likeablePersonRepository.delete(likeablePerson);
@@ -79,12 +92,7 @@ public class LikeablePersonService {
     }
 
     @Transactional
-    public RsData<LikeablePerson> modifyAttractive(Long likeableId, AttractiveType attractiveType) {
-        LikeablePerson likeablePerson = likeablePersonRepository.findById(likeableId).orElse(null);
-        if (likeablePerson == null) {
-            return RsData.of("F-1", "유효한 호감표시가 아닙니다.");
-        }
-
+    public RsData<LikeablePerson> modifyAttractive(LikeablePerson likeablePerson, AttractiveType attractiveType) {
         // need setter or DTO
         likeablePerson = LikeablePerson
                 .builder()
