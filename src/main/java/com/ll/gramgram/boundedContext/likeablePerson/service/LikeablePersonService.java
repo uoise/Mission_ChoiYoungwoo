@@ -33,8 +33,14 @@ public class LikeablePersonService {
 
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
-        if (likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(member.getInstaMember().getId(), toInstaMember.getId()).isPresent()) {
-            return RsData.of("F-1", "이미 등록한 호감상대 입니다.");
+        RsData<LikeablePerson> findExistRs = findByFromAndToInstaMember(fromInstaMember, toInstaMember);
+        if (findExistRs.getData() != null) {
+            return modifyAttractive(findExistRs.getData(), attractiveType);
+        }
+
+        final Long MAX_LIKEABLE_COUNT = 10L;
+        if (countByMember(fromInstaMember) >= MAX_LIKEABLE_COUNT) {
+            return RsData.of("F-3", "%d명 이상의 호감상대를 등록 할 수 없습니다.".formatted(MAX_LIKEABLE_COUNT));
         }
 
         LikeablePerson likeablePerson = LikeablePerson
@@ -82,13 +88,15 @@ public class LikeablePersonService {
         return RsData.of("S-1", "호감상대를 삭제했습니다.", Boolean.TRUE);
     }
 
-    // 해당 인스타 멤버의 호감상대 개수
+    // 해당 인스타 멤버의 호감표시 개수
     public Long countByMember(InstaMember fromInstaMember) {
         return likeablePersonRepository.countByFromInstaMemberId(fromInstaMember.getId());
     }
 
-    public RsData<LikeablePerson> findByFromInstaMemberAndToInstaMember(InstaMember fromInstaMember, InstaMember toInstaMember) {
-        return RsData.successOf(likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId()).orElse(null));
+    public RsData<LikeablePerson> findByFromAndToInstaMember(InstaMember fromInstaMember, InstaMember toInstaMember) {
+        return RsData.successOf(likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId())
+                .orElse(null)
+        );
     }
 
     @Transactional

@@ -4,15 +4,15 @@
 
 ---
 
-- [ ] `likeablePerson` constraints
+- [x] `likeablePerson` constraints
     - [x] change `attractiveTypeCode` to enum `attractiveTypeCode`
-    - [ ] add method can modify exist `likeablePerson`
+    - [x] add method can modify exist `likeablePerson`
     - [x] `fromMember` must like `toMember` only once
         - [x] testcase
         - [x] modify exist `likeablePerson`
-    - [ ] `fromMember` must `like` less than **LIMIT(11)**
-        - [ ] testcase
-        - [ ] `count(*)` from `likeablePerson` where `fromMemberId` = `?`;
+    - [x] `fromMember` must `like` less than **LIMIT(11)**
+        - [x] testcase
+        - [x] `count(*)` from `likeablePerson` where `fromMemberId` = `?`;
 - [ ] Oauth
     - [ ] naver
 
@@ -36,7 +36,7 @@
 - [ ] notification
     - [ ] when someone like you
 
-## N주차 미션 요약
+## 2주차 미션 요약
 
 ---
 
