@@ -18,12 +18,10 @@
 
 ---
 
-- [ ] `@PreAuthorize` exception
+- [ ] exception pages
     - [ ] testcase
-    - [ ] custom handler
-        - [ ] 4xx page custom
-        - [ ] `redirect:/`
-        - [ ] redirect to browser recent page
+    - [x] error page custom
+    - [x] link to `redirect:/`
 - [ ] service TestCases
 - [ ] QueryDSL
     - [ ] search
