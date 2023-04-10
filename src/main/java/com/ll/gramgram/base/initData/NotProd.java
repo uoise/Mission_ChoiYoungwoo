@@ -41,7 +41,7 @@ public class NotProd {
 
             likeablePersonService.like(memberUser3, "insta_user4", AttractiveType.APPEARANCE);
             likeablePersonService.like(memberUser3, "insta_user100", AttractiveType.ABILITY);
-            IntStream.range(1, 10).forEach(i -> likeablePersonService.like(memberUser5ByKakao, "insta_user%d".formatted(i), AttractiveType.findByCode((i % 3) + 1)));
+            IntStream.range(0, 10).forEach(i -> likeablePersonService.like(memberUser5ByKakao, "insta_user%d".formatted(i), AttractiveType.findByCode((i % 3) + 1)));
         };
     }
 }

@@ -129,10 +129,14 @@ public class LikeablePersonController {
         Member member = rq.getMember();
         RsData<Boolean> canModRs = likeablePersonService.isYourLike(member, likeablePerson);
         if (canModRs.isFail()) {
-            return canModRs.getMsg();
+            return rq.historyBack(canModRs.getMsg());
         }
 
-        RsData<LikeablePerson> deleteLikeablePersonRs = likeablePersonService.modifyAttractive(likeablePerson, attractiveType);
-        return rq.redirectWithMsg("/likeablePerson/list", deleteLikeablePersonRs.getMsg());
+        RsData<LikeablePerson> modifyLikeablePersonRs = likeablePersonService.modifyAttractive(likeablePerson, attractiveType);
+        if (modifyLikeablePersonRs.isFail()) {
+            return rq.historyBack(modifyLikeablePersonRs.getMsg());
+        }
+
+        return rq.redirectWithMsg("/likeablePerson/list", modifyLikeablePersonRs.getMsg());
     }
 }

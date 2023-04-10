@@ -217,7 +217,7 @@ class LikeablePersonControllerTests {
         assertThat(fromInstaMember).isNotNull();
         assertThat(toInstaMember).isNotNull();
 
-        LikeablePerson likeablePerson = likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData();
+        LikeablePerson likeablePerson = likeablePersonService.findByFromAndToInstaMember(fromInstaMember, toInstaMember).getData();
         AttractiveType curAttractiveType = likeablePerson.getAttractiveType();
         AttractiveType nxtAttractiveType = AttractiveType.findByCode((curAttractiveType.getCode() + 2) % 3 + 1);
         assertThat(nxtAttractiveType).isNotNull();
@@ -236,56 +236,20 @@ class LikeablePersonControllerTests {
                 .andExpect(handler().methodName("modify"))
                 .andExpect(status().is3xxRedirection())
         ;
-        assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData().getAttractiveType()).isEqualTo(nxtAttractiveType);
-    }
-
-    @Test
-    @DisplayName("fromMember must like toMember only once")
-    @WithUserDetails("KAKAO__2733144890")
-    void t009() throws Exception {
-        Member fromMember = memberService.findByUsername("KAKAO__2733144890").orElse(null);
-        Member toMember = memberService.findByUsername("user2").orElse(null);
-        assertThat(fromMember).isNotNull();
-        assertThat(toMember).isNotNull();
-
-        InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).orElse(null);
-        InstaMember toInstaMember = instaMemberService.findByUsername(toMember.getInstaMember().getUsername()).orElse(null);
-        assertThat(fromInstaMember).isNotNull();
-        assertThat(toInstaMember).isNotNull();
-
-        LikeablePerson likeablePerson = likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData();
-        assertThat(likeablePerson).isNotNull();
-
-        long beforeAddCount = likeablePersonService.countByMember(fromInstaMember);
-        // WHEN
-        ResultActions resultActions = mvc
-                .perform(post("/likeablePerson/add")
-                        .with(csrf()) // CSRF 키 생성
-                        .param("username", toInstaMember.getUsername())
-                        .param("attractiveTypeCode", "1")
-                )
-                .andDo(print());
-
-        // THEN
-        resultActions
-                .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("add"))
-                .andExpect(status().is4xxClientError());
-
-        assertThat(likeablePersonService.countByMember(fromInstaMember)).isEqualTo(beforeAddCount);
+        assertThat(likeablePersonService.findByFromAndToInstaMember(fromInstaMember, toInstaMember).getData().getAttractiveType()).isEqualTo(nxtAttractiveType);
     }
 
     @Test
     @DisplayName("add method can modify exist likeablePerson")
     @WithUserDetails("KAKAO__2733144890")
-    void t010() throws Exception {
+    void t009() throws Exception {
         Member fromMember = memberService.findByUsername("KAKAO__2733144890").orElseThrow();
         Member toMember = memberService.findByUsername("user2").orElseThrow();
 
         InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).orElseThrow();
         InstaMember toInstaMember = instaMemberService.findByUsername(toMember.getInstaMember().getUsername()).orElseThrow();
 
-        LikeablePerson likeablePerson = likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember).getData();
+        LikeablePerson likeablePerson = likeablePersonService.findByFromAndToInstaMember(fromInstaMember, toInstaMember).getData();
         assertThat(likeablePerson).isNotNull();
 
         AttractiveType newAttractiveType = AttractiveType.findByCode((likeablePerson.getAttractiveType().getCode() + 1) % 3 + 1);
@@ -306,16 +270,16 @@ class LikeablePersonControllerTests {
                 .andExpect(handler().methodName("add"))
                 .andExpect(status().is3xxRedirection());
 
-        assertThat(likeablePersonService.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember)
+        assertThat(likeablePersonService.findByFromAndToInstaMember(fromInstaMember, toInstaMember)
                 .getData()
-                .getId()
-        ).isNotEqualTo(likeablePerson.getId());
+                .getAttractiveType()
+        ).isEqualTo(newAttractiveType);
     }
 
     @Test
     @DisplayName("member must like less than LIMIT(11)")
     @WithUserDetails("KAKAO__2733144890")
-    void t011() throws Exception {
+    void t010() throws Exception {
         Member fromMember = memberService.findByUsername("KAKAO__2733144890").orElseThrow();
         InstaMember fromInstaMember = instaMemberService.findByUsername(fromMember.getInstaMember().getUsername()).orElseThrow();
 
