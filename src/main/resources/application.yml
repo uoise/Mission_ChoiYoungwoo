@@ -24,3 +24,6 @@ logging:
     com.ll.gramgram: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
+constraints:
+  likeable_person:
+    max-count: 10
