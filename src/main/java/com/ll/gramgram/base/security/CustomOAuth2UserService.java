@@ -38,6 +38,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         oAuth2Attribute.setPassword(member.getPassword());
         oAuth2Attribute.setAuthorities(member.getGrantedAuthorities());
 
-        return CustomUserFactory.of(oAuth2UserProvider).apply(oAuth2Attribute);
+        return CustomUserFactory.convert(oAuth2UserProvider, oAuth2Attribute);
     }
 }
