@@ -8,7 +8,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Collection;
 import java.util.Map;
 
-
 abstract class CustomOAuth2User extends User implements OAuth2User {
     @Getter
     private final String email;
