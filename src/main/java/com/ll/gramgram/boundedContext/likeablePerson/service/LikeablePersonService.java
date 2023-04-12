@@ -8,6 +8,7 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class LikeablePersonService {
+    @Value("${constraints.likeable_person.max-count}")
+    private final Long maxLikeableCount;
+
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
 
@@ -38,9 +42,8 @@ public class LikeablePersonService {
             return modifyAttractive(findExistRs.getData(), attractiveType);
         }
 
-        final Long MAX_LIKEABLE_COUNT = 10L;
-        if (countByMember(fromInstaMember) >= MAX_LIKEABLE_COUNT) {
-            return RsData.of("F-3", "%d명 이상의 호감상대를 등록 할 수 없습니다.".formatted(MAX_LIKEABLE_COUNT));
+        if (countByMember(fromInstaMember) >= maxLikeableCount) {
+            return RsData.of("F-3", "%d명 이상의 호감상대를 등록 할 수 없습니다.".formatted(maxLikeableCount));
         }
 
         LikeablePerson likeablePerson = LikeablePerson
