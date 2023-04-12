@@ -13,7 +13,11 @@ public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAut
             String email = (String) rawAttributes.get("email");
             String profileImage = (String) rawAttributes.get("picture");
 
-            return new OAuth2Attribute(username, email, profileImage, rawAttributes);
+            return OAuth2Attribute.builder()
+                    .username(username)
+                    .email(email)
+                    .profileImage(profileImage)
+                    .build();
         }
     },
     KAKAO(OAuth2UserProvider.KAKAO) {
@@ -25,7 +29,11 @@ public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAut
             String email = (String) kakaoAccount.get("email");
             String profileImage = (String) properties.get("profile_image");
 
-            return new OAuth2Attribute(username, email, profileImage, rawAttributes);
+            return OAuth2Attribute.builder()
+                    .username(username)
+                    .email(email)
+                    .profileImage(profileImage)
+                    .build();
         }
     },
     NAVER(OAuth2UserProvider.NAVER) {
@@ -36,7 +44,11 @@ public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAut
             String email = (String) attributes.get("email");
             String profileImage = (String) attributes.get("profile_image");
 
-            return new OAuth2Attribute(username, email, profileImage, attributes);
+            return OAuth2Attribute.builder()
+                    .username(username)
+                    .email(email)
+                    .profileImage(profileImage)
+                    .build();
         }
     };
 
