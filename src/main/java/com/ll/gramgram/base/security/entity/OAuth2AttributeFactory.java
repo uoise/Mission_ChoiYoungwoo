@@ -17,6 +17,7 @@ public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAut
                     .username(username)
                     .email(email)
                     .profileImage(profileImage)
+                    .attributes(rawAttributes)
                     .build();
         }
     },
@@ -33,6 +34,7 @@ public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAut
                     .username(username)
                     .email(email)
                     .profileImage(profileImage)
+                    .attributes(rawAttributes)
                     .build();
         }
     },
@@ -48,6 +50,7 @@ public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAut
                     .username(username)
                     .email(email)
                     .profileImage(profileImage)
+                    .attributes(attributes)
                     .build();
         }
     };
