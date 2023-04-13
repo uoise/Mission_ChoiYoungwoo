@@ -1,11 +1,12 @@
 package com.ll.gramgram.base.security.entity;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public enum AuthProvider {
     GRAMGRAM("GRAMGRAM"),

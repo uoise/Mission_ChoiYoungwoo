@@ -1,11 +1,12 @@
 package com.ll.gramgram.base.security.entity;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;
 import java.util.function.Function;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum CustomUserFactory {
     GOOGLE(AuthProvider.GOOGLE, GoogleUser::of),
     KAKAO(AuthProvider.KAKAO, KakaoUser::of),
