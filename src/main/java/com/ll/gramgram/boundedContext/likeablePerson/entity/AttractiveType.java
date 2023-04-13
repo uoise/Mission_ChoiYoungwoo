@@ -1,12 +1,13 @@
 package com.ll.gramgram.boundedContext.likeablePerson.entity;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum AttractiveType {
     APPEARANCE(1, "외모"),
     ABILITY(2, "능력"),

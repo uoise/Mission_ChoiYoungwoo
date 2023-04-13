@@ -1,5 +1,6 @@
 package com.ll.gramgram.base.security.entity;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -7,7 +8,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAuth2Attribute> {
     GOOGLE(AuthProvider.GOOGLE) {
         public OAuth2Attribute apply(Map<String, Object> rawAttributes) {
