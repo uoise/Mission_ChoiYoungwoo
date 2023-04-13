@@ -219,7 +219,9 @@ class LikeablePersonControllerTests {
 
         LikeablePerson likeablePerson = likeablePersonService.findByFromAndToInstaMember(fromInstaMember, toInstaMember).getData();
         AttractiveType curAttractiveType = likeablePerson.getAttractiveType();
-        AttractiveType nxtAttractiveType = AttractiveType.findByCode((curAttractiveType.getCode() + 2) % 3 + 1);
+        System.out.println(curAttractiveType);
+        AttractiveType nxtAttractiveType = AttractiveType.findByCode((curAttractiveType.getCode() + 1) % 3 + 1);
+        System.out.println(nxtAttractiveType);
         assertThat(nxtAttractiveType).isNotNull();
 
         // WHEN

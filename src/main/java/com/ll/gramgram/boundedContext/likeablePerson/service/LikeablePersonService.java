@@ -34,9 +34,10 @@ public class LikeablePersonService {
 
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
-        RsData<LikeablePerson> findExistRs = findByFromAndToInstaMember(fromInstaMember, toInstaMember);
-        if (findExistRs.getData() != null) {
-            return modifyAttractive(findExistRs.getData(), attractiveType);
+
+        Optional<LikeablePerson> optionalLikeablePerson = likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId());
+        if (optionalLikeablePerson.isPresent()) {
+            return modifyAttractive(optionalLikeablePerson.get(), attractiveType);
         }
 
         if (countByMember(fromInstaMember) >= AppConfig.getLikeablePersonMax()) {
@@ -101,6 +102,10 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData<LikeablePerson> modifyAttractive(LikeablePerson likeablePerson, AttractiveType attractiveType) {
+        if (likeablePerson.getAttractiveType().equals(attractiveType)) {
+            return RsData.of("F-1", "기존 호감표시와 동일합니다.", null);
+        }
+
         // need setter or DTO
         likeablePerson = LikeablePerson
                 .builder()
