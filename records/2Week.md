@@ -19,8 +19,9 @@
 ---
 
 - [x] OAuth
-    - [x] provider enum
-    - [x] provider factory
+    - [x] AuthProvider enum
+    - [x] OAuth2AttributeFactory
+    - [x] OAuth2UserFactory
     - [ ] refactor
 - [ ] exception pages
     - [ ] testcase
