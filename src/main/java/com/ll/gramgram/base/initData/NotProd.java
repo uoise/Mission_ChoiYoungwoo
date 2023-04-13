@@ -1,5 +1,6 @@
 package com.ll.gramgram.base.initData;
 
+import com.ll.gramgram.base.security.entity.AuthProvider;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.AttractiveType;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
@@ -32,7 +33,10 @@ public class NotProd {
             Member memberUser3 = memberService.findByUsername("user3").orElseThrow(() -> new UsernameNotFoundException("user3"));
             Member memberUser4 = memberService.findByUsername("user4").orElseThrow(() -> new UsernameNotFoundException("user4"));
 
-            Member memberUser5ByKakao = memberService.whenSocialLogin("KAKAO", "KAKAO__2733144890").getData();
+            Member memberUser5ByKakao = memberService.whenSocialLogin(AuthProvider.KAKAO, "KAKAO__2733144890").getData();
+            Member memberUser6ByGoogle = memberService.whenSocialLogin(AuthProvider.GOOGLE, "GOOGLE__105329473286779708168").getData();
+            Member memberUser7ByNaver = memberService.whenSocialLogin(AuthProvider.NAVER, "NAVER__q6WW1Wi4tLdCgOvvLhJWCLpdU9Nzfcdra7uH1-0CGV0").getData();
+
 
             instaMemberService.connect(memberUser2, "insta_user2", "M");
             instaMemberService.connect(memberUser3, "insta_user3", "W");
