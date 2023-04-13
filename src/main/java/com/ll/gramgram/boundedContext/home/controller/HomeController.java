@@ -13,6 +13,7 @@ import java.util.Enumeration;
 @RequiredArgsConstructor
 public class HomeController {
     private final Rq rq;
+
     @GetMapping("/")
     public String showMain() {
         return "usr/home/main";

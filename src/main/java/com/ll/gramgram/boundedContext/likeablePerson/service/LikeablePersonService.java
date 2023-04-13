@@ -120,7 +120,6 @@ public class LikeablePersonService {
 
         likeablePersonRepository.save(likeablePerson);
 
-        return RsData.of("S-1", "입력하신 인스타유저(%s)의 매력포인트를 변경했습니다.".formatted(likeablePerson.getToInstaMember()), likeablePerson);
+        return RsData.of("S-1", "입력하신 인스타유저(%s)의 매력포인트를 변경했습니다.".formatted(likeablePerson.getToInstaMember().getUsername()), likeablePerson);
     }
-
 }

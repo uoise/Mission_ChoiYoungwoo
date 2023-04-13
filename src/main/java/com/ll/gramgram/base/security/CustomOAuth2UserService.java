@@ -1,9 +1,9 @@
 package com.ll.gramgram.base.security;
 
+import com.ll.gramgram.base.security.entity.AuthProvider;
 import com.ll.gramgram.base.security.entity.CustomUserFactory;
 import com.ll.gramgram.base.security.entity.OAuth2Attribute;
 import com.ll.gramgram.base.security.entity.OAuth2AttributeFactory;
-import com.ll.gramgram.base.security.entity.OAuth2UserProvider;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -28,16 +28,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        OAuth2UserProvider oAuth2UserProvider = OAuth2UserProvider.of(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
+        AuthProvider authProvider = AuthProvider.of(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
-        OAuth2Attribute oAuth2Attribute = OAuth2AttributeFactory.of(oAuth2UserProvider).apply(oAuth2User.getAttributes());
+        OAuth2Attribute oAuth2Attribute = OAuth2AttributeFactory.of(authProvider).apply(oAuth2User.getAttributes());
 
-        Member member = memberService.whenSocialLogin(oAuth2UserProvider.getValue(), oAuth2Attribute.getUsername()).getData();
+        Member member = memberService.whenSocialLogin(authProvider, oAuth2Attribute.getUsername()).getData();
 
         oAuth2Attribute.setUsername(member.getUsername());
         oAuth2Attribute.setPassword(member.getPassword());
         oAuth2Attribute.setAuthorities(member.getGrantedAuthorities());
 
-        return CustomUserFactory.convert(oAuth2UserProvider, oAuth2Attribute);
+        return CustomUserFactory.convert(authProvider, oAuth2Attribute);
     }
 }

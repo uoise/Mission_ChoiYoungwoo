@@ -1,13 +1,15 @@
 package com.ll.gramgram.base.security.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 
+@AllArgsConstructor
 public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAuth2Attribute> {
-    GOOGLE(OAuth2UserProvider.GOOGLE) {
+    GOOGLE(AuthProvider.GOOGLE) {
         public OAuth2Attribute apply(Map<String, Object> rawAttributes) {
             String username = String.format(usernameFormat, this.getValue().getValue(), rawAttributes.get("sub")); // wierd
             String email = (String) rawAttributes.get("email");
@@ -21,7 +23,7 @@ public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAut
                     .build();
         }
     },
-    KAKAO(OAuth2UserProvider.KAKAO) {
+    KAKAO(AuthProvider.KAKAO) {
         public OAuth2Attribute apply(Map<String, Object> rawAttributes) {
             Map<String, Object> kakaoAccount = (Map<String, Object>) rawAttributes.get("kakao_account");
             Map<String, Object> properties = (Map<String, Object>) rawAttributes.get("properties");
@@ -38,7 +40,7 @@ public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAut
                     .build();
         }
     },
-    NAVER(OAuth2UserProvider.NAVER) {
+    NAVER(AuthProvider.NAVER) {
         public OAuth2Attribute apply(Map<String, Object> rawAttributes) {
             Map<String, Object> attributes = (Map<String, Object>) rawAttributes.get("response");
 
@@ -57,15 +59,11 @@ public enum OAuth2AttributeFactory implements Function<Map<String, Object>, OAut
 
     private static final String usernameFormat = "%s__%s";
     @Getter
-    private final OAuth2UserProvider value;
+    private final AuthProvider value;
 
-    OAuth2AttributeFactory(OAuth2UserProvider value) {
-        this.value = value;
-    }
-
-    public static OAuth2AttributeFactory of(OAuth2UserProvider oAuth2UserProvider) {
+    public static OAuth2AttributeFactory of(AuthProvider authProvider) {
         return Arrays.stream(values())
-                .filter(v -> v.value.equals(oAuth2UserProvider))
+                .filter(v -> v.value.equals(authProvider))
                 .findFirst()
                 .orElse(GOOGLE);
     }

@@ -1,24 +1,22 @@
 package com.ll.gramgram.base.security.entity;
 
+import lombok.AllArgsConstructor;
+
 import java.util.Arrays;
 import java.util.function.Function;
 
+@AllArgsConstructor
 public enum CustomUserFactory {
-    GOOGLE(OAuth2UserProvider.GOOGLE, GoogleUser::of),
-    KAKAO(OAuth2UserProvider.KAKAO, KakaoUser::of),
-    NAVER(OAuth2UserProvider.NAVER, NaverUser::of);
+    GOOGLE(AuthProvider.GOOGLE, GoogleUser::of),
+    KAKAO(AuthProvider.KAKAO, KakaoUser::of),
+    NAVER(AuthProvider.NAVER, NaverUser::of);
 
-    private final OAuth2UserProvider oAuth2UserProvider;
+    private final AuthProvider authProvider;
     private final Function<OAuth2Attribute, CustomOAuth2User> convertor;
 
-    CustomUserFactory(OAuth2UserProvider oAuth2UserProvider, Function<OAuth2Attribute, CustomOAuth2User> convertor) {
-        this.oAuth2UserProvider = oAuth2UserProvider;
-        this.convertor = convertor;
-    }
-
-    public static CustomOAuth2User convert(OAuth2UserProvider oAuth2UserProvider, OAuth2Attribute oAuth2Attribute) {
+    public static CustomOAuth2User convert(AuthProvider authProvider, OAuth2Attribute oAuth2Attribute) {
         return Arrays.stream(values())
-                .filter(v -> v.oAuth2UserProvider.equals(oAuth2UserProvider))
+                .filter(v -> v.authProvider.equals(authProvider))
                 .findFirst()
                 .orElse(GOOGLE)
                 .convertor
