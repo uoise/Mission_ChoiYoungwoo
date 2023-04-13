@@ -47,7 +47,20 @@
 
 ### OAuth
 
-CustomOAuth2UserService
+**CustomOAuth2UserService**
+
+`OAuth2Provider` 별 `Attributes` 파싱을 if-else chain 으로 구성하고 싶지 않음
+
+1. `switch`
+    - 구현은 쉬우나 별 차이 없음
+2. Enum has `Function` Field
+    - `field`에 접근하여 함수를 호출
+    - 각 상수가 여러 함수를 가질 수 있음
+    - 생성자에서 함수를 정의
+    - 함수의 유연성이 비교적 떨어짐
+3. Enum implements `Function Interface`
+    - 상수 자체가 함수, `apply()` 를 통해 함수 접근
+
 **초기안**
 
 1. `Provider` 를 Enum 으로 정의
