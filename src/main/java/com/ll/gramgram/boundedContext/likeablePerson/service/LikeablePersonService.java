@@ -70,7 +70,7 @@ public class LikeablePersonService {
         return likeablePerson.map(RsData::successOf).orElseGet(() -> RsData.of("F-1", "해당하는 호감상대를 찾을 수 없습니다.", null));
     }
 
-    public RsData<Boolean> isYourLike(Member member, LikeablePerson likeablePerson) {
+    public RsData<Boolean> isSameAuthor(Member member, LikeablePerson likeablePerson) {
         if (!likeablePerson.getFromInstaMember().getId().equals(member.getInstaMember().getId())) {
             return RsData.of("F-1", "해당 호감에 대한 권한이 없습니다.", Boolean.FALSE);
         }
@@ -80,7 +80,7 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData<Boolean> delete(Member member, LikeablePerson likeablePerson) {
-        RsData<Boolean> rsData = isYourLike(member, likeablePerson);
+        RsData<Boolean> rsData = isSameAuthor(member, likeablePerson);
         if (rsData.getData().equals(false)) {
             return rsData;
         }
