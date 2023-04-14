@@ -127,7 +127,7 @@ public class LikeablePersonController {
 
         LikeablePerson likeablePerson = findLikeablePersonRs.getData();
         Member member = rq.getMember();
-        RsData<Boolean> canModRs = likeablePersonService.isYourLike(member, likeablePerson);
+        RsData<Boolean> canModRs = likeablePersonService.isSameAuthor(member, likeablePerson);
         if (canModRs.isFail()) {
             return rq.historyBack(canModRs.getMsg());
         }
