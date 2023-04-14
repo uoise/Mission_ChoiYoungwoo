@@ -6,7 +6,7 @@ import jakarta.persistence.Converter;
 
 
 @Converter
-public class AttractiveTypeConverter implements AttributeConverter<com.ll.gramgram.boundedContext.likeablePerson.entity.AttractiveType, Integer> {
+public class AttractiveTypeConverter implements AttributeConverter<AttractiveType, Integer> {
 
     @Override
     public Integer convertToDatabaseColumn(AttractiveType attribute) {
