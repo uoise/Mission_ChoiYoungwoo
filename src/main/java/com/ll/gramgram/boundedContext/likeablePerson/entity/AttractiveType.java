@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Arrays;
+
 @Getter
 @ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -17,9 +19,9 @@ public enum AttractiveType {
     private final String value;
 
     public static AttractiveType findByCode(Integer code) {
-        for (AttractiveType attractiveType : values()) {
-            if (attractiveType.code.equals(code)) return attractiveType;
-        }
-        return null;
+        return Arrays.stream(values())
+                .filter(a -> a.code.equals(code))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Not Supported AttractiveType"));
     }
 }
