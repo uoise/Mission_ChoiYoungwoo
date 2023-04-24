@@ -37,3 +37,5 @@ out/
 .vscode/
 src/main/resources/config/**
 /records/template.md
+
+src/main/generated

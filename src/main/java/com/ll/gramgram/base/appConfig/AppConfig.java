@@ -1,4 +1,4 @@
-package com.ll.gramgram.boundedContext.config;
+package com.ll.gramgram.base.appConfig;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
