@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc // http 요청, 응답 테스트
 @Transactional // 실제로 테스트에서 발생한 DB 작업이 영구적으로 적용되지 않도록, test + 트랜잭션 => 자동롤백
 @ActiveProfiles("test") // application-test.yml 을 활성화 시킨다.
-public class InstaMemberControllerTests {
+class InstaMemberControllerTests {
     @Autowired
     private MockMvc mvc;
     @Autowired
@@ -60,7 +60,7 @@ public class InstaMemberControllerTests {
                         <input type="radio" name="gender" value="M"
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <input type="submit" value="정보입력"
+                        id="btn-insta-member-connect-1"
                         """.stripIndent().trim())));
     }
 
