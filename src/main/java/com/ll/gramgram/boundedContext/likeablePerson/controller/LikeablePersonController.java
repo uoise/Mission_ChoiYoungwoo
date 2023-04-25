@@ -25,34 +25,55 @@ public class LikeablePersonController {
     private final Rq rq;
     private final LikeablePersonService likeablePersonService;
 
-    @GetMapping("/add")
-    public String showAdd(Model model) {
+    @GetMapping("/like")
+    public String showLike(Model model) {
         model.addAttribute("attractiveTypes", AttractiveType.values());
 
-        return "usr/likeablePerson/add";
+        return "usr/likeablePerson/like";
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class AddForm {
-        private final String username;
-        private final int attractiveTypeCode;
-    }
-
-    @PostMapping("/add")
-    public String add(@Valid AddForm addForm) {
-        AttractiveType attractiveType = AttractiveType.findByCode(addForm.getAttractiveTypeCode());
+    @PostMapping("/like")
+    public String like(@Valid LikeablePersonController.LikeForm likeForm) {
+        AttractiveType attractiveType = AttractiveType.findByCode(likeForm.getAttractiveTypeCode());
         if (attractiveType == null) {
             // need to change
             return rq.historyBack(RsData.failOf(null));
         }
 
-        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), attractiveType);
+        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), likeForm.getUsername(), attractiveType);
         if (createRsData.isFail()) {
             return rq.historyBack(createRsData);
         }
 
         return rq.redirectWithMsg("/likeablePerson/list", createRsData);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{id}")
+    public String modify(@PathVariable Long id, @Valid LikeablePersonController.LikeForm likeForm) {
+        AttractiveType attractiveType = AttractiveType.findByCode(likeForm.getAttractiveTypeCode());
+        if (attractiveType == null) {
+            // need to change
+            return rq.historyBack(RsData.failOf(null));
+        }
+        RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
+        if (findLikeablePersonRs.isFail()) {
+            return findLikeablePersonRs.getMsg();
+        }
+
+        LikeablePerson likeablePerson = findLikeablePersonRs.getData();
+        Member member = rq.getMember();
+        RsData<Boolean> canModRs = likeablePersonService.isSameAuthor(member, likeablePerson);
+        if (canModRs.isFail()) {
+            return rq.historyBack(canModRs.getMsg());
+        }
+
+        RsData<LikeablePerson> modifyLikeablePersonRs = likeablePersonService.modifyAttractive(likeablePerson, attractiveType);
+        if (modifyLikeablePersonRs.isFail()) {
+            return rq.historyBack(modifyLikeablePersonRs.getMsg());
+        }
+
+        return rq.redirectWithMsg("/likeablePerson/list", modifyLikeablePersonRs.getMsg());
     }
 
     @GetMapping("/list")
@@ -112,31 +133,10 @@ public class LikeablePersonController {
         return "usr/likeablePerson/modify";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modify/{id}")
-    public String modify(@PathVariable Long id, @Valid AddForm addForm) {
-        AttractiveType attractiveType = AttractiveType.findByCode(addForm.getAttractiveTypeCode());
-        if (attractiveType == null) {
-            // need to change
-            return rq.historyBack(RsData.failOf(null));
-        }
-        RsData<LikeablePerson> findLikeablePersonRs = likeablePersonService.findById(id);
-        if (findLikeablePersonRs.isFail()) {
-            return findLikeablePersonRs.getMsg();
-        }
-
-        LikeablePerson likeablePerson = findLikeablePersonRs.getData();
-        Member member = rq.getMember();
-        RsData<Boolean> canModRs = likeablePersonService.isSameAuthor(member, likeablePerson);
-        if (canModRs.isFail()) {
-            return rq.historyBack(canModRs.getMsg());
-        }
-
-        RsData<LikeablePerson> modifyLikeablePersonRs = likeablePersonService.modifyAttractive(likeablePerson, attractiveType);
-        if (modifyLikeablePersonRs.isFail()) {
-            return rq.historyBack(modifyLikeablePersonRs.getMsg());
-        }
-
-        return rq.redirectWithMsg("/likeablePerson/list", modifyLikeablePersonRs.getMsg());
+    @AllArgsConstructor
+    @Getter
+    public static class LikeForm {
+        private final String username;
+        private final int attractiveTypeCode;
     }
 }
