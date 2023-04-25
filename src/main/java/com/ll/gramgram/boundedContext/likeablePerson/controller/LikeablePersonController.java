@@ -91,7 +91,7 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public String cancel(@PathVariable Long id) {
         Member member = rq.getMember();
         if (!member.hasConnectedInstaMember()) {
             return rq.redirectWithMsg("/likeablePerson/list", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
@@ -102,12 +102,12 @@ public class LikeablePersonController {
             return rq.historyBack(findLikeablePersonRs.getMsg());
         }
 
-        RsData<Boolean> deleteLikeablePersonRs = likeablePersonService.delete(member, findLikeablePersonRs.getData());
-        if (deleteLikeablePersonRs.isFail()) {
-            return rq.historyBack(deleteLikeablePersonRs.getMsg());
+        RsData<Boolean> cancelLikeablePersonRs = likeablePersonService.cancel(member, findLikeablePersonRs.getData());
+        if (cancelLikeablePersonRs.isFail()) {
+            return rq.historyBack(cancelLikeablePersonRs.getMsg());
         }
 
-        return rq.redirectWithMsg("/likeablePerson/list", deleteLikeablePersonRs.getMsg());
+        return rq.redirectWithMsg("/likeablePerson/list", cancelLikeablePersonRs.getMsg());
     }
 
     @PreAuthorize("isAuthenticated()")

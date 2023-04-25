@@ -162,7 +162,7 @@ class LikeablePersonControllerTests {
         // THEN
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("delete"))
+                .andExpect(handler().methodName("cancel"))
                 .andExpect(status().is3xxRedirection());
 
         RsData<LikeablePerson> likeablePersonRsData = likeablePersonService.findById(4L);
@@ -184,7 +184,7 @@ class LikeablePersonControllerTests {
         // THEN
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("delete"))
+                .andExpect(handler().methodName("cancel"))
                 .andExpect(status().is4xxClientError());
 
         RsData<LikeablePerson> likeablePersonRsData = likeablePersonService.findById(4L);

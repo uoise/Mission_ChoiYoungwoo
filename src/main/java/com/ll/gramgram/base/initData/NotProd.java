@@ -1,5 +1,6 @@
 package com.ll.gramgram.base.initData;
 
+import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.base.security.entity.AuthProvider;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.AttractiveType;
@@ -45,7 +46,7 @@ public class NotProd {
 
             likeablePersonService.like(memberUser3, "insta_user4", AttractiveType.APPEARANCE);
             likeablePersonService.like(memberUser3, "insta_user100", AttractiveType.ABILITY);
-            IntStream.range(0, 10).forEach(i -> likeablePersonService.like(memberUser5ByKakao, "insta_user%d".formatted(i), AttractiveType.findByCode((i % 3) + 1)));
+            IntStream.range(0, Math.toIntExact(AppConfig.getLikeablePersonMax())).forEach(i -> likeablePersonService.like(memberUser5ByKakao, "insta_user%d".formatted(i), AttractiveType.findByCode((i % 3) + 1)));
         };
     }
 }

@@ -79,7 +79,7 @@ public class LikeablePersonService {
 
 
     @Transactional
-    public RsData<Boolean> delete(Member member, LikeablePerson likeablePerson) {
+    public RsData<Boolean> cancel(Member member, LikeablePerson likeablePerson) {
         RsData<Boolean> rsData = isSameAuthor(member, likeablePerson);
         if (rsData.getData().equals(false)) {
             return rsData;
