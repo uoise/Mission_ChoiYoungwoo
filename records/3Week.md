@@ -12,7 +12,9 @@
     - [x] Docker
     - [x] MariaDB
     - [ ] git
-- [ ] Modifying like has a cool time of 3 hours
+- [x] Modifying like has a cool time of 3 hours
+  - [x] humanReadable
+  - [x] validation
 - [ ] Notification
   - [ ] when someone like me
   - [ ] when someone modifies like about me 
