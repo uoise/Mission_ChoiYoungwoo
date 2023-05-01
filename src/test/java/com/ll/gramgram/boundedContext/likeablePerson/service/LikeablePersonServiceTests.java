@@ -246,17 +246,39 @@ public class LikeablePersonServiceTests {
         // 현재시점 기준에서 쿨타임이 다 차는 시간을 구한다.(미래)
         LocalDateTime coolTime = AppConfig.genLikeablePersonModifyUnlockDate();
 
+        final int beforeAttCode = 3;
+        final int afterAttCode = (beforeAttCode + 1) % 3;
+
         Member memberUser3 = memberService.findByUsername("user3").orElseThrow();
         // 호감표시를 생성한다.
-        LikeablePerson likeablePersonToBts = likeablePersonService.like(memberUser3, "bts", 3).getData();
+        LikeablePerson likeablePersonToBts = likeablePersonService.like(memberUser3, "bts", beforeAttCode).getData();
+
+        assertThat(
+                likeablePersonToBts.getAttractiveTypeCode()
+        ).isEqualTo(beforeAttCode);
+
+        final LocalDateTime curCool = likeablePersonToBts.getModifyUnlockDate();
+        final LocalDateTime sfCool = LocalDateTime.now().minusSeconds(1);
 
         // 호감표시를 생성하면 쿨타임이 지정되기 때문에, 그래서 바로 수정이 안된다.
         // 그래서 강제로 쿨타임이 지난것으로 만든다.
         // 테스트를 위해서 억지로 값을 넣는다.
-        TestUt.setFieldValue(likeablePersonToBts, "modifyUnlockDate", LocalDateTime.now().minusSeconds(-1));
+        TestUt.setFieldValue(likeablePersonToBts, "modifyUnlockDate", sfCool);
+
+        assertThat(
+                likeablePersonToBts.getModifyUnlockDate()
+        ).isEqualTo(sfCool);
+
+        assertThat(
+                sfCool
+        ).isBefore(LocalDateTime.now());
 
         // 수정을 하면 쿨타임이 갱신된다.
-        likeablePersonService.modifyAttractive(memberUser3, likeablePersonToBts, 1);
+        likeablePersonService.modifyAttractive(memberUser3, likeablePersonToBts, afterAttCode);
+
+        assertThat(
+                likeablePersonToBts.getAttractiveTypeCode()
+        ).isEqualTo(afterAttCode);
 
         // 갱신 되었는지 확인
         assertThat(
