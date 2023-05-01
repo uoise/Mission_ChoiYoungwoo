@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-@RequestMapping("/instaMember")
+@RequestMapping("/usr/instaMember")
 @RequiredArgsConstructor
 public class InstaMemberController {
     private final Rq rq;
@@ -30,17 +30,6 @@ public class InstaMemberController {
         return "usr/instaMember/connect";
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class ConnectForm {
-        @NotBlank
-        @Size(min = 4, max = 30)
-        private final String username;
-        @NotBlank
-        @Size(min = 1, max = 1)
-        private final String gender;
-    }
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/connect")
     public String connect(@Valid ConnectForm connectForm) {
@@ -50,6 +39,17 @@ public class InstaMemberController {
             return rq.historyBack(rsData);
         }
 
-        return rq.redirectWithMsg("/likeablePerson/add", "인스타그램 계정이 연결되었습니다.");
+        return rq.redirectWithMsg("/usr/likeablePerson/like", "인스타그램 계정이 연결되었습니다.");
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class ConnectForm {
+        @NotBlank
+        @Size(min = 3, max = 30)
+        private final String username;
+        @NotBlank
+        @Size(min = 1, max = 1)
+        private final String gender;
     }
 }

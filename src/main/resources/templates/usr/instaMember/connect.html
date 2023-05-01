@@ -1,7 +1,7 @@
 <html layout:decorate="~{usr/layout/layout.html}">
 
 <head>
-    <title>본인의 인스타그램 정보입력</title>
+    <title>인스타 아이디 입력</title>
 </head>
 
 <body>
@@ -40,22 +40,22 @@
     <div class="max-w-2xl w-full px-4">
         <h1 class="mb-4">
             <i class="fa-brands fa-instagram"></i>
-            인스타아이디 인증
+            인스타아이디 입력
         </h1>
 
-        <form class="flex flex-col gap-6" method="POST" onSubmit="ConnectForm__submit(this); return false;"
-              th:action>
+        <form class="flex flex-col gap-6" method="POST" onsubmit="ConnectForm__submit(this); return false;" th:action>
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text">인스타아이디</span>
+                    <span class="label-text">
+                        <i class="fa-brands fa-instagram"></i>
+                        인스타 아이디
+                    </span>
                 </label>
-                <input autoFocus class="input input-bordered" name="username" onChange="$(this).keyup();"
-                       onKeyUp="$(this).next().children(':last-child').text(this.value.trim());"
-                       onPaste="setTimeoutZero(() => $(this).keyup());"
-                       placeholder="인스타아이디"
+                <input autofocus class="input input-bordered" name="username" onchange="$(this).keyup();" onkeyup="$(this).next().children(':last-child').text(this.value.trim());"
+                       onpaste="setTimeoutZero(() => $(this).keyup());"
+                       placeholder="인스타 아이디"
                        type="text"/>
-                <a class="block mt-3 text-sm break-all underline text-blue-400" href="#"
-                   onClick="$(this).attr('href', $(this).text().replaceAll(' ', ''));"
+                <a class="block mt-3 text-sm break-all underline text-blue-400" href="#" onclick="$(this).attr('href', $(this).text().replaceAll(' ', ''));"
                    target="_blank">
                     <span>https://instagram.com/</span><span class="text-red-300"></span>
                 </a>
@@ -70,7 +70,10 @@
 
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text">성별</span>
+                    <span class="label-text">
+                        <i class="fa-solid fa-person-half-dress"></i>
+                        성별
+                    </span>
                 </label>
 
                 <!-- 라벨을 클릭하면 라벨의 하위요소인 버튼(체크,라디오,일반 등)이 클릭되는 효과) -->
@@ -96,7 +99,7 @@
 
             <button class="btn btn-block btn-primary gap-1" id="btn-insta-member-connect-1">
                 <i class="fa-brands fa-instagram"></i>
-                <span>인스타아이디 인증</span>
+                <span>인스타 아이디 입력</span>
             </button>
         </form>
     </div>
@@ -104,3 +107,4 @@
 </body>
 
 </html>
+
