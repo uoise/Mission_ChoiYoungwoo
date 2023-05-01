@@ -6,16 +6,16 @@
 
 ---
 
--[ ] Deploy 
-  -[ ] NCP
-    -[x] CentOS
-    -[x] Docker
-    -[x] MariaDB
-    -[ ] git
--[ ] Modifying like has a cool time of 3 hours
--[ ] Notification
-  -[ ] when someone like me
-  -[ ] when someone modifies like about me 
+- [ ] Deploy 
+  - [ ] NCP
+    - [x] CentOS
+    - [x] Docker
+    - [x] MariaDB
+    - [ ] git
+- [ ] Modifying like has a cool time of 3 hours
+- [ ] Notification
+  - [ ] when someone like me
+  - [ ] when someone modifies like about me 
 
 ### 3주차 미션 요약
 
