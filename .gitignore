@@ -35,7 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
-src/main/resources/config/**
-/records/template.md
+
+### Custom ###
+application-secret.yml
 
 src/main/generated

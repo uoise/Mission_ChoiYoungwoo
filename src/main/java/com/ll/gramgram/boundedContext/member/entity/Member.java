@@ -1,11 +1,8 @@
 package com.ll.gramgram.boundedContext.member.entity;
 
-import com.ll.gramgram.base.BaseEntity;
-import com.ll.gramgram.base.security.entity.AuthProvider;
-import com.ll.gramgram.base.security.entity.OAuth2UserProviderConverter;
+import com.ll.gramgram.base.baseEntity.BaseEntity;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
@@ -25,9 +22,7 @@ import java.util.List;
 @SuperBuilder
 @ToString(callSuper = true)
 public class Member extends BaseEntity {
-    @Convert(converter = OAuth2UserProviderConverter.class)
-    @Column(nullable = false)
-    private AuthProvider authProvider;
+    private String providerTypeCode; // 일반회원인지, 카카오로 가입한 회원인지, 구글로 가입한 회원인지
     @Column(unique = true)
     private String username;
     private String password;
@@ -43,11 +38,15 @@ public class Member extends BaseEntity {
         grantedAuthorities.add(new SimpleGrantedAuthority("member"));
 
         // username이 admin인 회원은 추가로 admin 권한도 가진다.
-        if ("admin".equals(username)) {
+        if (isAdmin()) {
             grantedAuthorities.add(new SimpleGrantedAuthority("admin"));
         }
 
         return grantedAuthorities;
+    }
+
+    public boolean isAdmin() {
+        return "admin".equals(username);
     }
 
     // 이 회원이 본인의 인스타ID를 등록했는지 안했는지
@@ -55,8 +54,8 @@ public class Member extends BaseEntity {
         return instaMember != null;
     }
 
-
     public String getNickname() {
-        return "%04d".formatted(getId());
+        // 최소 6자 이상
+        return "%1$4s".formatted(Long.toString(getId(), 36)).replace(' ', '0');
     }
 }

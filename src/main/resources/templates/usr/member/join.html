@@ -59,32 +59,34 @@
             회원가입
         </h1>
 
-        <form class="flex flex-col gap-6" method="POST" onSubmit="JoinForm__submit(this); return false;" th:action>
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text">아이디</span>
-                </label>
-                <input autoFocus class="input input-bordered" name="username" placeholder="아이디" type="text"/>
-            </div>
+        <form class="flex flex-col gap-6" method="POST" onsubmit="JoinForm__submit(this); return false;" th:action>
+            <th:block th:if="false">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">아이디</span>
+                    </label>
+                    <input autofocus class="input input-bordered" name="username" placeholder="아이디" type="text"/>
+                </div>
 
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text">비빌번호</span>
-                </label>
-                <input class="input input-bordered" name="password" placeholder="비빌번호" type="password"/>
-            </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">비빌번호</span>
+                    </label>
+                    <input class="input input-bordered" name="password" placeholder="비빌번호" type="password"/>
+                </div>
 
-            <div class="form-control">
-                <label class="label">
-                    <span class="label-text">비빌번호 확인</span>
-                </label>
-                <input class="input input-bordered" name="passwordConfirm" placeholder="비빌번호 확인" type="password"/>
-            </div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">비빌번호 확인</span>
+                    </label>
+                    <input class="input input-bordered" name="passwordConfirm" placeholder="비빌번호 확인" type="password"/>
+                </div>
 
-            <button class="btn btn-block btn-primary gap-1" id="btn-join-1">
-                <i class="fa-solid fa-arrow-right-to-bracket"></i>
-                <span>회원가입</span>
-            </button>
+                <button class="btn btn-block btn-primary gap-1" id="btn-join-1">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>회원가입</span>
+                </button>
+            </th:block>
 
             <a class="btn btn-block btn-outline gap-1" href="/oauth2/authorization/kakao">
                 <i class="fa-solid fa-comment text-[color:#ffe812]"></i>
@@ -102,7 +104,7 @@
             </a>
 
             <div class="flex flex-wrap justify-center">
-                <a class="btn btn-link" href="/member/login">로그인</a>
+                <a class="btn btn-link" href="/usr/member/login">로그인</a>
                 <a class="btn btn-link" href="#">아이디찾기</a>
                 <a class="btn btn-link" href="#">비밀번호찾기</a>
             </div>
@@ -113,3 +115,4 @@
 </body>
 
 </html>
+

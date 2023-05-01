@@ -1,7 +1,6 @@
 package com.ll.gramgram.boundedContext.member.service;
 
 import com.ll.gramgram.base.rsData.RsData;
-import com.ll.gramgram.base.security.entity.AuthProvider;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.member.repository.MemberRepository;
@@ -29,11 +28,11 @@ public class MemberService {
     // 일반 회원가입(소셜 로그인을 통한 회원가입이 아님)
     public RsData<Member> join(String username, String password) {
         // "GRAMGRAM" 해당 회원이 일반회원가입으로 인해 생성되었다는걸 나타내기 위해서
-        return join(AuthProvider.GRAMGRAM, username, password);
+        return join("GRAMGRAM", username, password);
     }
 
     // 내부 처리함수, 일반회원가입, 소셜로그인을 통한 회원가입(최초 로그인 시 한번만 발생)에서 이 함수를 사용함
-    private RsData<Member> join(AuthProvider authProvider, String username, String password) {
+    private RsData<Member> join(String providerTypeCode, String username, String password) {
         if (findByUsername(username).isPresent()) {
             return RsData.of("F-1", "해당 아이디(%s)는 이미 사용중입니다.".formatted(username));
         }
@@ -43,7 +42,7 @@ public class MemberService {
 
         Member member = Member
                 .builder()
-                .authProvider(authProvider)
+                .providerTypeCode(providerTypeCode)
                 .username(username)
                 .password(password)
                 .build();
@@ -63,12 +62,12 @@ public class MemberService {
 
     // 소셜 로그인(카카오, 구글, 네이버) 로그인이 될 때 마다 실행되는 함수
     @Transactional
-    public RsData<Member> whenSocialLogin(AuthProvider authProvider, String username) {
+    public RsData<Member> whenSocialLogin(String providerTypeCode, String username) {
         Optional<Member> opMember = findByUsername(username); // username 예시 : KAKAO__1312319038130912, NAVER__1230812300
 
         if (opMember.isPresent()) return RsData.of("S-2", "로그인 되었습니다.", opMember.get());
 
         // 소셜 로그인를 통한 가입시 비번은 없다.
-        return join(authProvider, username, ""); // 최초 로그인 시 딱 한번 실행
+        return join(providerTypeCode, username, ""); // 최초 로그인 시 딱 한번 실행
     }
 }

@@ -17,12 +17,18 @@ public class HomeController {
 
     @GetMapping("/")
     public String showMain() {
-        return "usr/home/main";
+        if (rq.isLogout()) return "redirect:/usr/member/login";
+
+        return "redirect:/usr/member/me";
     }
 
-    @GetMapping("/debugSession")
+    @GetMapping("/usr/home/about")
+    public String showAbout() {
+        return "usr/home/about";
+    }
+
+    @GetMapping("/usr/debugSession")
     @ResponseBody
-    @PreAuthorize("hasAuthority('admin')")
     public String showDebugSession(HttpSession session) {
         StringBuilder sb = new StringBuilder("Session content:\n");
 
@@ -30,15 +36,15 @@ public class HomeController {
         while (attributeNames.hasMoreElements()) {
             String attributeName = attributeNames.nextElement();
             Object attributeValue = session.getAttribute(attributeName);
-            sb.append(attributeName).append(": ").append(attributeValue).append("\n");
+            sb.append(String.format("%s: %s\n", attributeName, attributeValue));
         }
 
         return sb.toString().replaceAll("\n", "<br>");
     }
 
-    @GetMapping("/historyBackTest")
+    @GetMapping("/usr/historyBackTest")
     @PreAuthorize("hasAuthority('admin')")
     public String showHistoryBackTest(HttpSession session) {
-        return rq.historyBack("Not Allowed");
+        return rq.historyBack("여기는 당신같은 사람이 오면 안되요.");
     }
 }
