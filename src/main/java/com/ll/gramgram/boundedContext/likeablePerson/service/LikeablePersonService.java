@@ -141,7 +141,11 @@ public class LikeablePersonService {
         return likeablePersonRepository.findByFromInstaMember_usernameAndToInstaMember_username(fromInstaMemberUsername, toInstaMemberUsername);
     }
 
-    @Transactional
+    /*
+    * seems read only
+    *
+    * */
+//    @Transactional
     public RsData<LikeablePerson> modifyAttractive(Member actor, Long id, int attractiveTypeCode) {
         Optional<LikeablePerson> likeablePersonOptional = findById(id);
 
