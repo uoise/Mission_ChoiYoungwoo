@@ -203,6 +203,10 @@ public class LikeablePersonService {
             return RsData.of("F-1", "먼저 본인의 인스타그램 아이디를 입력해주세요.");
         }
 
+        if (!likeablePerson.isModifyUnlocked()) {
+            return RsData.of("F-3", "%s이 지난 뒤에 수정할 수 있습니다.".formatted(likeablePerson.getModifyUnlockDateRemainStrHuman()));
+        }
+
         InstaMember fromInstaMember = actor.getInstaMember();
 
         if (!Objects.equals(likeablePerson.getFromInstaMember().getId(), fromInstaMember.getId())) {
