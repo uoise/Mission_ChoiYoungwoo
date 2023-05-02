@@ -91,6 +91,8 @@
     ```shell
    # gradle build
     cd /docker_projects/gram/project
+    
+    chmod 744 gradlew
    
    ./gradlew clean build
    # form tests failure is ok
