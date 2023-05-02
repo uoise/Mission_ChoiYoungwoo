@@ -94,8 +94,10 @@
     
     chmod 744 gradlew
    
-   ./gradlew clean build
+   
    # form tests failure is ok
+   # ./gradlew clean build
+   ./gradlew -x test clean build
    
    # Docker build
    docker build -t gramgram . 
@@ -103,9 +105,16 @@
    
 9. Docker run
     ```shell
+   # keystore disabled
+   # docker run \
+   #  --name=gramgram_1 \
+   #  -p 443:443 \
+   #  --rm \
+   #  -d \
+   #  gramgram   
    docker run \
     --name=gramgram_1 \
-    -p 443:443 \
+    -p 8080:8080 \
     --rm \
     -d \
     gramgram
