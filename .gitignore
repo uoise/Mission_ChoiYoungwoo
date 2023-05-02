@@ -38,5 +38,5 @@ out/
 
 ### Custom ###
 application-secret.yml
-
+keystore.p12
 src/main/generated
