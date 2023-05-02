@@ -7,11 +7,14 @@
 ---
 
 - [ ] Deploy 
-  - [ ] NCP
-    - [x] CentOS
+  - [x] NCP
+  - [x] AGP setting
+  - [x] CentOS
     - [x] Docker
     - [x] MariaDB
-    - [ ] git
+    - [ ] nginx 
+      - [x] [Domain](https://www.uoise.xyz)
+      - [ ] HTTPS
 - [x] Modifying like has a cool time of 3 hours
   - [x] humanReadable
   - [x] validation
