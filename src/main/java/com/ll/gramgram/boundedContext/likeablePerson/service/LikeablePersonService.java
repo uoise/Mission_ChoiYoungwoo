@@ -10,6 +10,8 @@ import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
+import com.ll.gramgram.boundedContext.notification.event.EventModNotify;
+import com.ll.gramgram.boundedContext.notification.event.EventNewNotify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,7 @@ public class LikeablePersonService {
         toInstaMember.addToLikeablePerson(likeablePerson);
 
         publisher.publishEvent(new EventAfterLike(this, likeablePerson));
+        publisher.publishEvent(new EventNewNotify(this, likeablePerson));
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
@@ -142,9 +145,9 @@ public class LikeablePersonService {
     }
 
     /*
-    * seems read only
-    *
-    * */
+     * seems read only
+     *
+     * */
 //    @Transactional
     public RsData<LikeablePerson> modifyAttractive(Member actor, Long id, int attractiveTypeCode) {
         Optional<LikeablePerson> likeablePersonOptional = findById(id);
@@ -199,6 +202,7 @@ public class LikeablePersonService {
 
         if (rsData.isSuccess()) {
             publisher.publishEvent(new EventAfterModifyAttractiveType(this, likeablePerson, oldAttractiveTypeCode, attractiveTypeCode));
+            publisher.publishEvent(new EventModNotify(this, likeablePerson, oldAttractiveTypeCode));
         }
     }
 
