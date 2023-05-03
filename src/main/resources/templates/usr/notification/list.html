@@ -69,9 +69,24 @@
             </div>
         </div>
     </div>
+    <script>
+        const eventSource = new EventSource('/sse/notification/unread');
+        let notifications = [];
 
+        eventSource.onmessage = (event) => {
+            console.log(event.data);
+            notifications.push({
+                timestamp: Date.now(),
+                content: '새로운 알림입니다.',
+                data: event.data,
+            });
+            notifications.forEach(el => console.log(el));
+        };
+        eventSource.onerror = (event) => {
+            console.error(event);
+        };
+    </script>
 </main>
-
 
 </body>
 
