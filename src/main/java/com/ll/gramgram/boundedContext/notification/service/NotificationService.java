@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationService {
     private final NotificationRepository notificationRepository;
-    private final NotificationSseService notificationSseService;
 
     @Transactional
     public RsData<Notification> createNewNotify(LikeablePerson likeablePerson) {
@@ -68,11 +67,5 @@ public class NotificationService {
 
     public List<Notification> findUnreadByToInstaMember(InstaMember toInstaMember) {
         return notificationRepository.findByToInstaMemberAndReadDateIsNull(toInstaMember);
-    }
-
-    private void sendSseWithUnreadLists(InstaMember toInstaMember, Notification notification) {
-        List<Notification> unreadNotifications = findUnreadByToInstaMember(toInstaMember);
-        unreadNotifications.add(notification);
-        notificationSseService.createUnreadNotificationsSseEmitter(toInstaMember, unreadNotifications);
     }
 }
