@@ -108,8 +108,8 @@ public class LikeablePersonController {
 
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
-            // 해당 인스타회원이 좋아하는 사람들 목록
-            List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+            // 해당 인스타회원을 좋아하는 사람들 목록
+            List<LikeablePerson> likeablePeople = likeablePersonService.searchLikeablePerson(instaMember, gender, attractiveTypeCode, sortCode);
             model.addAttribute("likeablePeople", likeablePeople);
         }
 

@@ -14,8 +14,13 @@
     - [ ] CI
     - [ ] CD
 - [ ] notification
-  - [ ] filter by gender
+  - [x] filter by
+    - [x] gender
+    - [x] attractiveType
   - [ ] sort by
+    - [x] temporal
+    - [x] popularity
+    - [ ] attractiveType
 
 ### 4주차 미션 요약
 

@@ -9,6 +9,7 @@ import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
+import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepositoryImpl;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.notification.event.EventModNotify;
 import com.ll.gramgram.boundedContext.notification.event.EventNewNotify;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
+    private final LikeablePersonRepositoryImpl likeablePersonRepositoryImpl;
     private final InstaMemberService instaMemberService;
     private final ApplicationEventPublisher publisher;
 
@@ -226,5 +228,9 @@ public class LikeablePersonService {
 
 
         return RsData.of("S-1", "호감표시취소가 가능합니다.");
+    }
+
+    public List<LikeablePerson> searchLikeablePerson(InstaMember instaMember, String gender, Integer attractiveTypeCode, Integer sortCode) {
+        return likeablePersonRepositoryImpl.searchLikeablePerson(instaMember.getId(), gender, attractiveTypeCode, sortCode);
     }
 }
