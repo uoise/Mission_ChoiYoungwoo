@@ -1,5 +1,6 @@
 package com.ll.gramgram.base.initData;
 
+import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.stream.IntStream;
 
 @Configuration
 @Profile({"dev", "test"})
@@ -51,6 +53,22 @@ public class NotProd {
                 Ut.reflection.setFieldValue(likeablePersonToInstaUser100, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
 
                 LikeablePerson likeablePersonToInstaUserAbcd = likeablePersonService.like(memberUser3, "insta_user_abcd", 2).getData();
+
+                // aaa1 most likes, aaa10 most liked
+                Member[] members = IntStream
+                        .rangeClosed(1, 10)
+                        .mapToObj(i -> memberService.join("aaa%d".formatted(i), "1234").getData())
+                        .toArray(Member[]::new);
+
+                InstaMember[] instaMembers = IntStream
+                        .rangeClosed(1, 10)
+                        .mapToObj(i -> instaMemberService.connect(members[i - 1], "aii%d".formatted(i), i % 2 == 1 ? "M" : "W").getData())
+                        .toArray(InstaMember[]::new);
+
+
+                for (int i = 0; i < 10; i++)
+                    for (int j = i + 1; j < 10; j++)
+                        likeablePersonService.like(members[i], instaMembers[j].getUsername(), i % 3 + 1);
             }
         };
     }
