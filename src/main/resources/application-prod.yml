@@ -27,4 +27,4 @@ logging:
     org.hibernate.orm.jdbc.extract: INFO
 custom:
   site:
-    baseurl: https://www.uoise.xyz
+    baseUrl: https://www.uoise.xyz
