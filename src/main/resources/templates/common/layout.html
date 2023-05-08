@@ -2,32 +2,30 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-          name="viewport">
-    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <!-- 제이쿼리 불러오기 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     <!-- toastr 불러오기 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
-    <link href="https://jhs512.github.io/toastr/toastr.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://jhs512.github.io/toastr/toastr.css">
 
     <!-- 폰트어썸 아이콘 -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- 아이콘 목록 : https://fontawesome.com/search?o=r&m=free -->
 
     <!-- 공통 JS 불러오기 -->
     <script src="/resource/common/common.js"></script>
     <!-- 공통 CSS 불러오기 -->
-    <link href="/resource/common/common.css" rel="stylesheet">
+    <link rel="stylesheet" href="/resource/common/common.css">
 
     <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE" th:utext="#{c.logoTextWithEmojiEn}"></title>
-
-
-    <script th:inline="javascript">
+    <script>
         // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
-        const params = /*[[ ${param} ]]*/ null;
+        const params = JSON.parse('[( ${@rq.paramsJsonStr} )]');
     </script>
 </head>
 
@@ -45,9 +43,6 @@
 </div>
 
 <script th:inline="javascript">
-    // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
-    const params = /*[[ ${param} ]]*/ null;
-
     if (params.msg) {
         toastNotice(params.msg[0]);
     }
@@ -75,9 +70,9 @@
     });
 </script>
 
-<script async crossorigin="anonymous"
+<script src="https://cdn.jsdelivr.net/npm/jdenticon@3.2.0/dist/jdenticon.min.js" async
         integrity="sha384-yBhgDqxM50qJV5JPdayci8wCfooqvhFYbIKhv0hTtLvfeeyJMJCscRfFNKIxt43M"
-        src="https://cdn.jsdelivr.net/npm/jdenticon@3.2.0/dist/jdenticon.min.js">
+        crossorigin="anonymous">
 </script>
 
 </body>
