@@ -104,14 +104,7 @@
    ```
    
 9. Docker run
-    ```shell
-   # keystore disabled
-   # docker run \
-   #  --name=gramgram_1 \
-   #  -p 443:443 \
-   #  --rm \
-   #  -d \
-   #  gramgram   
+    ```shell 
    docker run \
     --name=gramgram_1 \
     -p 8080:8080 \
