@@ -23,6 +23,12 @@
     <link href="/resource/common/common.css" rel="stylesheet">
 
     <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE" th:utext="#{c.logoTextWithEmojiEn}"></title>
+
+
+    <script th:inline="javascript">
+        // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
+        const params = /*[[ ${param} ]]*/ null;
+    </script>
 </head>
 
 <body>
