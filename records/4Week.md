@@ -13,14 +13,14 @@
   - [ ] Jenkins
     - [ ] CI
     - [ ] CD
-- [ ] notification
+- [x] toList
   - [x] filter by
     - [x] gender
     - [x] attractiveType
-  - [ ] sort by
+  - [x] sort by
     - [x] temporal
     - [x] popularity
-    - [ ] attractiveType
+    - [x] attractiveType
 
 ### 4주차 미션 요약
 
