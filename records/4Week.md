@@ -6,13 +6,13 @@
 
 ---
 
-- [ ] Deploy
+- [x] Deploy
   - [x] https
   - [x] [Domain](https://www.uoise.xyz)
   - [x] OAuth login
-  - [ ] Jenkins
-    - [ ] CI
-    - [ ] CD
+  - [x] Jenkins
+    - [x] pipeline
+    - [x] github webhook
 - [x] toList
   - [x] testcase  
   - [x] filter by
@@ -29,5 +29,10 @@
 
 **[접근 방법]**
 
+- refernce
+  - queryDSL  
+    - [dynamic query](https://tecoble.techcourse.co.kr/post/2022-10-11-jpa-dynamic-query/)
+  - deploy
+    - [jenkins ignore failure](https://goddessbest-qa.tistory.com/99)
 
 **[특이사항]**
