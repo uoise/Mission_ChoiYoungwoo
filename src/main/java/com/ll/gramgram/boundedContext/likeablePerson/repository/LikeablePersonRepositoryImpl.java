@@ -58,6 +58,8 @@ public class LikeablePersonRepositoryImpl implements LikeablePersonRepositoryCus
             case 2 -> likeablePerson.createDate.asc();
             case 3 -> likeablePerson.fromInstaMember.toLikeablePeople.size().desc();
             case 4 -> likeablePerson.fromInstaMember.toLikeablePeople.size().asc();
+            case 5 -> likeablePerson.fromInstaMember.gender.desc();
+            case 6 -> likeablePerson.attractiveTypeCode.asc();
             default -> likeablePerson.createDate.desc();
         };
     }
