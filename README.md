@@ -96,8 +96,8 @@
    
    
    # form tests failure is ok
-   # ./gradlew clean build
-   ./gradlew -x test clean build
+    ./gradlew clean build
+   # ./gradlew -x test clean build
    
    # Docker build
    docker build -t gramgram . 
