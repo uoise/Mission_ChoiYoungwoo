@@ -14,6 +14,7 @@
     - [ ] CI
     - [ ] CD
 - [x] toList
+  - [x] testcase  
   - [x] filter by
     - [x] gender
     - [x] attractiveType
