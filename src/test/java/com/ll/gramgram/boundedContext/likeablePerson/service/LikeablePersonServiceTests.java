@@ -4,6 +4,7 @@ package com.ll.gramgram.boundedContext.likeablePerson.service;
 import com.ll.gramgram.TestUt;
 import com.ll.gramgram.base.appConfig.AppConfig;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
+import com.ll.gramgram.boundedContext.instaMember.repository.InstaMemberRepository;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
@@ -19,6 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class LikeablePersonServiceTests {
+class LikeablePersonServiceTests {
     @Autowired
     private MemberService memberService;
     @Autowired
@@ -220,7 +225,7 @@ public class LikeablePersonServiceTests {
     @DisplayName("설정파일에서 호감표시에 대한 수정쿨타임 가져오기")
     void t006() throws Exception {
         System.out.println("likeablePersonModifyCoolTime : " + AppConfig.getLikeablePersonModifyCoolTime());
-        assertThat(AppConfig.getLikeablePersonModifyCoolTime()).isGreaterThan(0);
+        assertThat(AppConfig.getLikeablePersonModifyCoolTime()).isPositive();
     }
 
     @Test
@@ -284,5 +289,100 @@ public class LikeablePersonServiceTests {
         assertThat(
                 likeablePersonToBts.getModifyUnlockDate().isAfter(coolTime)
         ).isTrue();
+    }
+
+    @Test
+    @DisplayName("filter by")
+    void t009() throws Exception {
+        // Validate that each item has one or more items
+        final InstaMember i10 = memberService.findByUsername("aaa10").get().getInstaMember();
+        assertThat(i10).isNotNull();
+
+        List<LikeablePerson> likes = likeablePersonService.searchLikeablePerson(i10, "U", 0, 0);
+
+        Map<String, List<LikeablePerson>> genderResult = likes.stream().collect(Collectors.groupingBy(l -> l.getFromInstaMember().getGender()));
+        assertThat(genderResult.get("M")).isNotEmpty();
+        assertThat(genderResult.get("W")).isNotEmpty();
+
+        Map<Integer, List<LikeablePerson>> attResult = likes.stream().collect(Collectors.groupingBy(LikeablePerson::getAttractiveTypeCode));
+        IntStream.rangeClosed(1, 3).forEach(i -> assertThat(attResult.get(i)).isNotEmpty());
+
+        // filter man
+        List<LikeablePerson> manLikes = likeablePersonService.searchLikeablePerson(i10, "M", 0, 0);
+        System.out.println(manLikes.size());
+
+        // man + woman = tot
+        assertThat(manLikes.size() + genderResult.get("W").size()).isEqualTo(likes.size());
+
+        Map<String, List<LikeablePerson>> maleResult = manLikes.stream().collect(Collectors.groupingBy(l -> l.getFromInstaMember().getGender()));
+
+        assertThat(maleResult.getOrDefault("W", null)).isNull();
+
+        // filter tgtAtt
+        final int tgtAtt = 2;
+        List<LikeablePerson> attLikes = likeablePersonService.searchLikeablePerson(i10, "U", tgtAtt, 0);
+
+        assertThat(attLikes.stream().filter(l -> l.getAttractiveTypeCode() == tgtAtt).count()).isEqualTo(attLikes.size());
+
+
+        // filter complex
+        List<LikeablePerson> cplxLikes = likeablePersonService.searchLikeablePerson(i10, "M", tgtAtt, 0).stream().sorted().toList();
+        List<LikeablePerson> tgtLikes = genderResult.get("M").stream().filter(l -> l.getAttractiveTypeCode() == tgtAtt).sorted().toList();
+
+        assertThat(IntStream.range(0, tgtLikes.size()).filter(i -> !Objects.equals(cplxLikes.get(i).getId(), tgtLikes.get(i).getId())).count()).isZero();
+    }
+
+    @Test
+    @DisplayName("order by")
+    void t010() throws Exception {
+        final InstaMember i10 = memberService.findByUsername("aaa10").get().getInstaMember();
+        assertThat(i10).isNotNull();
+
+        List<LikeablePerson> newOrder = likeablePersonService.searchLikeablePerson(i10, "U", 0, 1);
+        LocalDateTime befDate = null;
+        for (LikeablePerson l : newOrder) {
+            if (befDate != null) assertThat(befDate).isAfter(l.getCreateDate());
+            befDate = l.getCreateDate();
+        }
+
+        List<LikeablePerson> oldOrder = likeablePersonService.searchLikeablePerson(i10, "U", 0, 2);
+        LocalDateTime aftDate = null;
+        for (LikeablePerson l : oldOrder) {
+            if (aftDate != null) assertThat(aftDate).isBefore(l.getCreateDate());
+            aftDate = l.getCreateDate();
+        }
+
+
+        List<LikeablePerson> favorOrder = likeablePersonService.searchLikeablePerson(i10, "U", 0, 3);
+        long cnt = Long.MAX_VALUE;
+        for (LikeablePerson l : favorOrder) {
+            long cur = l.getFromInstaMember().getToLikeablePeople().size();
+            assertThat(cur).isLessThan(cnt);
+            cnt = cur;
+        }
+
+        List<LikeablePerson> disFavOrder = likeablePersonService.searchLikeablePerson(i10, "U", 0, 4);
+        cnt = Long.MIN_VALUE;
+        for (LikeablePerson l : disFavOrder) {
+            long cur = l.getFromInstaMember().getToLikeablePeople().size();
+            assertThat(cur).isGreaterThan(cnt);
+            cnt = cur;
+        }
+
+        List<LikeablePerson> womanFirstOrder = likeablePersonService.searchLikeablePerson(i10, "U", 0, 5);
+        boolean manVisited = false;
+        for (LikeablePerson l : womanFirstOrder) {
+            String curGen = l.getFromInstaMember().getGender();
+            if (!manVisited && curGen.equals("M")) manVisited = true;
+            else if (manVisited) assertThat(curGen).isEqualTo("M");
+        }
+
+        List<LikeablePerson> attOrder = likeablePersonService.searchLikeablePerson(i10, "U", 0, 6);
+        int lstAtt = 0;
+        for (LikeablePerson l : attOrder) {
+            int curAtt = l.getAttractiveTypeCode();
+            assertThat(curAtt).isGreaterThanOrEqualTo(lstAtt);
+            lstAtt = Math.max(lstAtt, curAtt);
+        }
     }
 }
