@@ -45,7 +45,7 @@ public class LikeablePersonRepositoryImpl implements LikeablePersonRepositoryCus
 
     private BooleanExpression eqGender(String gender) {
         if (gender == null || gender.equals("U")) return null;
-        return likeablePerson.toInstaMember.gender.eq(gender);
+        return likeablePerson.fromInstaMember.gender.eq(gender);
     }
 
     private BooleanExpression eqAtt(Integer attractiveTypeCode) {
