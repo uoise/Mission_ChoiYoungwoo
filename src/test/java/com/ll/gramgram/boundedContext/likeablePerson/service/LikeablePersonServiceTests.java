@@ -309,7 +309,6 @@ class LikeablePersonServiceTests {
 
         // filter man
         List<LikeablePerson> manLikes = likeablePersonService.searchLikeablePerson(i10, "M", 0, 0);
-        System.out.println(manLikes.size());
 
         // man + woman = tot
         assertThat(manLikes.size() + genderResult.get("W").size()).isEqualTo(likes.size());
