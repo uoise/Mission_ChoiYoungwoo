@@ -22,7 +22,7 @@
 
             <div class="card bg-base-100 shadow-xl">
                 <div class="card-body">
-                    <form class="flex flex-col gap-6">
+                    <form class="searchForm flex flex-col gap-6" onsubmit="searchFormSubmit(this)">
                         <div class="form-control">
                             <label class="label">
                                 <span class="label-text">
@@ -87,6 +87,32 @@
                             </script>
                         </div>
                     </form>
+                    <script>
+                        function searchFormSubmit(form) {
+                            let pars =
+                                "gender=" + form.gender.value +
+                                "&attractiveTypeCode=" + form.attractiveTypeCode.value +
+                                "&sortCode=" + form.sortCode.value
+                            ;
+                            console.log("usr/likeablePerson/toList/search?" + pars);
+                            fetch("toList/search?" + pars, {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Accept": "application/json"
+                                },
+                            })
+                                .then(response => {
+                                        console.log(response);
+                                        // if (response.body.isFail) return;
+                                        let lists = response.body.data;
+                                        console.log(lists);
+                                        // $('#searchForm').replaceWith(lists);
+                                        return false;
+                                    }
+                                )
+                        }
+                    </script>
                 </div>
             </div>
 
