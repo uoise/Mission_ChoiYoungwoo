@@ -29,7 +29,7 @@
 
 **[접근 방법]**
 
-- refernce
+- reference
   - queryDSL  
     - [dynamic query](https://tecoble.techcourse.co.kr/post/2022-10-11-jpa-dynamic-query/)
   - deploy
