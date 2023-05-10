@@ -7,15 +7,17 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/usr/likeablePerson")
@@ -101,19 +103,54 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showToList(Model model, @RequestParam(value = "gender", defaultValue = "U") String gender,
-                             @RequestParam(value = "attractiveTypeCode", defaultValue = "0") Integer attractiveTypeCode,
-                             @RequestParam(value = "sortCode", defaultValue = "1") Integer sortCode) {
+    public String showToList(Model model) {
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
             // 해당 인스타회원을 좋아하는 사람들 목록
-            List<LikeablePerson> likeablePeople = likeablePersonService.searchLikeablePerson(instaMember, gender, attractiveTypeCode, sortCode);
+            List<LikeablePerson> likeablePeople = likeablePersonService.searchLikeablePerson(instaMember, "U", 0, 1);
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
         return "usr/likeablePerson/toList";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/toList/search")
+    @ResponseBody
+    public RsData<Map<String, Object>> searchToList(@RequestParam(value = "gender", defaultValue = "U") String gender,
+                                                    @RequestParam(value = "attractiveTypeCode", defaultValue = "0") Integer attractiveTypeCode,
+                                                    @RequestParam(value = "sortCode", defaultValue = "1") Integer sortCode) {
+        InstaMember instaMember = rq.getMember().getInstaMember();
+        if (instaMember == null) return RsData.failOf(Collections.emptyMap());
+
+        Map<String, Object> ret = new HashMap<>();
+        ret.put("lists", likeablePersonService.searchLikeablePerson(instaMember, gender, attractiveTypeCode, sortCode)
+                .stream()
+                .map(LikeablePersonDto::new)
+                .toList()
+        );
+        return RsData.successOf(
+                ret
+        );
+    }
+
+
+    @Data
+    @ToString
+    public static class LikeablePersonDto {
+        final String jdenticon;
+        final LocalDateTime createDate;
+        final String genderDisplayName;
+        final String attractiveTypeDisplayName;
+
+        LikeablePersonDto(LikeablePerson likeablePerson) {
+            jdenticon = likeablePerson.getJdenticon();
+            createDate = likeablePerson.getCreateDate();
+            genderDisplayName = likeablePerson.getFromInstaMember().getGenderDisplayName();
+            attractiveTypeDisplayName = likeablePerson.getAttractiveTypeDisplayName();
+        }
     }
 
     @AllArgsConstructor

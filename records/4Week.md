@@ -22,7 +22,7 @@
     - [x] temporal
     - [x] popularity
     - [x] attractiveType
-
+- [ ] ajax
 ### 4주차 미션 요약
 
 ---
@@ -36,3 +36,6 @@
     - [jenkins ignore failure](https://goddessbest-qa.tistory.com/99)
 
 **[특이사항]**
+- ajax 로 요청까지는 성공
+- Response에 body가 리턴되지 않음
+- thymeleaf 에서 다시 렌더링 해야함
