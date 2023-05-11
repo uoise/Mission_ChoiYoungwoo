@@ -109,7 +109,8 @@ public class LikeablePersonController {
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
             // 해당 인스타회원을 좋아하는 사람들 목록
-            List<LikeablePerson> likeablePeople = likeablePersonService.searchLikeablePerson(instaMember, "U", 0, 1);
+            List<LikeablePersonToListDto> likeablePeople = likeablePersonService.searchLikeablePerson(instaMember, "U", 0, 1);
+            likeablePeople.forEach(System.out::println);
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
@@ -126,31 +127,12 @@ public class LikeablePersonController {
         if (instaMember == null) return RsData.failOf(Collections.emptyMap());
 
         Map<String, Object> ret = new HashMap<>();
-        ret.put("lists", likeablePersonService.searchLikeablePerson(instaMember, gender, attractiveTypeCode, sortCode)
-                .stream()
-                .map(LikeablePersonDto::new)
-                .toList()
-        );
+        List<LikeablePersonToListDto> res = likeablePersonService.searchLikeablePerson(instaMember, gender, attractiveTypeCode, sortCode);
+        res.forEach(System.out::println);
+        ret.put("lists", res);
         return RsData.successOf(
                 ret
         );
-    }
-
-
-    @Data
-    @ToString
-    public static class LikeablePersonDto {
-        final String jdenticon;
-        final LocalDateTime createDate;
-        final String genderDisplayName;
-        final String attractiveTypeDisplayName;
-
-        LikeablePersonDto(LikeablePerson likeablePerson) {
-            jdenticon = likeablePerson.getJdenticon();
-            createDate = likeablePerson.getCreateDate();
-            genderDisplayName = likeablePerson.getFromInstaMember().getGenderDisplayName();
-            attractiveTypeDisplayName = likeablePerson.getAttractiveTypeDisplayName();
-        }
     }
 
     @AllArgsConstructor
