@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.entity;
 
+import com.ll.gramgram.standard.util.Ut;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -17,6 +18,10 @@ public class LikeablePersonToListDto {
     private final String gender;
     private final Long fromInstaMemberLikesCount;
     private final int attractiveTypeCode;
+
+    public String getJdenticon() {
+        return Ut.hash.sha256(fromInstaMemberId + "_likes_" + toInstaMemberId);
+    }
 
     public String getGenderDisplayName() {
         return gender.equals("W") ? "여성" : "남성";
@@ -37,7 +42,7 @@ public class LikeablePersonToListDto {
         };
     }
 
-    public String attractiveTypeDisplayNameWithIcon() {
+    public String getAttractiveTypeDisplayNameWithIcon() {
         return switch (attractiveTypeCode) {
             case 1 -> "<i class=\"fa-solid fa-person-rays\"></i>";
             case 2 -> "<i class=\"fa-regular fa-face-smile\"></i>";

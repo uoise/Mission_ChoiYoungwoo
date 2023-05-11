@@ -4,20 +4,20 @@ import com.ll.gramgram.base.rq.Rq;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
+import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePersonToListDto;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/usr/likeablePerson")
@@ -110,7 +110,6 @@ public class LikeablePersonController {
         if (instaMember != null) {
             // 해당 인스타회원을 좋아하는 사람들 목록
             List<LikeablePersonToListDto> likeablePeople = likeablePersonService.searchLikeablePerson(instaMember, "U", 0, 1);
-            likeablePeople.forEach(System.out::println);
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
@@ -120,19 +119,13 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList/search")
     @ResponseBody
-    public RsData<Map<String, Object>> searchToList(@RequestParam(value = "gender", defaultValue = "U") String gender,
-                                                    @RequestParam(value = "attractiveTypeCode", defaultValue = "0") Integer attractiveTypeCode,
-                                                    @RequestParam(value = "sortCode", defaultValue = "1") Integer sortCode) {
+    public RsData<List<LikeablePersonToListDto>> searchToList(@RequestParam(value = "gender", defaultValue = "U") String gender,
+                                                              @RequestParam(value = "attractiveTypeCode", defaultValue = "0") Integer attractiveTypeCode,
+                                                              @RequestParam(value = "sortCode", defaultValue = "1") Integer sortCode) {
         InstaMember instaMember = rq.getMember().getInstaMember();
-        if (instaMember == null) return RsData.failOf(Collections.emptyMap());
+        if (instaMember == null) return RsData.failOf(Collections.emptyList());
 
-        Map<String, Object> ret = new HashMap<>();
-        List<LikeablePersonToListDto> res = likeablePersonService.searchLikeablePerson(instaMember, gender, attractiveTypeCode, sortCode);
-        res.forEach(System.out::println);
-        ret.put("lists", res);
-        return RsData.successOf(
-                ret
-        );
+        return RsData.successOf(likeablePersonService.searchLikeablePerson(instaMember, gender, attractiveTypeCode, sortCode));
     }
 
     @AllArgsConstructor
