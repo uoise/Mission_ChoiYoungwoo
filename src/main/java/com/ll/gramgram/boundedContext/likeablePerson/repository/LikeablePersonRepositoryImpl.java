@@ -1,7 +1,9 @@
 package com.ll.gramgram.boundedContext.likeablePerson.repository;
 
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
+import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePersonToListDto;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +33,17 @@ public class LikeablePersonRepositoryImpl implements LikeablePersonRepositoryCus
     }
 
     @Override
-    public List<LikeablePerson> searchLikeablePerson(long toInstaMemberId, String gender, Integer attractiveTypeCode, Integer sortCode) {
+    public List<LikeablePersonToListDto> searchLikeablePerson(long toInstaMemberId, String gender, Integer attractiveTypeCode, Integer sortCode) {
         return jpaQueryFactory
-                .selectFrom(likeablePerson)
+                .select(Projections.constructor(LikeablePersonToListDto.class,
+                                likeablePerson.fromInstaMember.id,
+                                likeablePerson.toInstaMember.id,
+                                likeablePerson.createDate,
+                                likeablePerson.fromInstaMember.gender,
+                                likeablePerson.attractiveTypeCode
+                        )
+                )
+                .from(likeablePerson)
                 .where(
                         likeablePerson.toInstaMember.id.eq(toInstaMemberId)
                                 .and(eqGender(gender))
@@ -55,12 +65,12 @@ public class LikeablePersonRepositoryImpl implements LikeablePersonRepositoryCus
 
     private OrderSpecifier<?> orderSelector(Integer sortCode) {
         return switch (sortCode) {
-            case 2 -> likeablePerson.createDate.asc();
+            case 2 -> likeablePerson.id.asc();
             case 3 -> likeablePerson.fromInstaMember.toLikeablePeople.size().desc();
             case 4 -> likeablePerson.fromInstaMember.toLikeablePeople.size().asc();
             case 5 -> likeablePerson.fromInstaMember.gender.desc();
             case 6 -> likeablePerson.attractiveTypeCode.asc();
-            default -> likeablePerson.createDate.desc();
+            default -> likeablePerson.id.desc();
         };
     }
 }

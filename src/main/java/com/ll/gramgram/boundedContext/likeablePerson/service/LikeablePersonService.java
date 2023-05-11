@@ -8,6 +8,7 @@ import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
+import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePersonToListDto;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepositoryImpl;
 import com.ll.gramgram.boundedContext.member.entity.Member;
@@ -230,7 +231,7 @@ public class LikeablePersonService {
         return RsData.of("S-1", "호감표시취소가 가능합니다.");
     }
 
-    public List<LikeablePerson> searchLikeablePerson(InstaMember instaMember, String gender, Integer attractiveTypeCode, Integer sortCode) {
+    public List<LikeablePersonToListDto> searchLikeablePerson(InstaMember instaMember, String gender, Integer attractiveTypeCode, Integer sortCode) {
         return likeablePersonRepositoryImpl.searchLikeablePerson(instaMember.getId(), gender, attractiveTypeCode, sortCode);
     }
 }
