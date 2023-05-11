@@ -36,10 +36,12 @@ public class LikeablePersonRepositoryImpl implements LikeablePersonRepositoryCus
     public List<LikeablePersonToListDto> searchLikeablePerson(long toInstaMemberId, String gender, Integer attractiveTypeCode, Integer sortCode) {
         return jpaQueryFactory
                 .select(Projections.constructor(LikeablePersonToListDto.class,
+                                likeablePerson.id,
                                 likeablePerson.fromInstaMember.id,
                                 likeablePerson.toInstaMember.id,
                                 likeablePerson.createDate,
                                 likeablePerson.fromInstaMember.gender,
+                                likeablePerson.fromInstaMember.likesCount,
                                 likeablePerson.attractiveTypeCode
                         )
                 )
