@@ -92,74 +92,35 @@
                             let pars =
                                 "gender=" + form.gender.value +
                                 "&attractiveTypeCode=" + form.attractiveTypeCode.value +
-                                "&sortCode=" + form.sortCode.value
-                            ;
-                            console.log("usr/likeablePerson/toList/search?" + pars);
+                                "&sortCode=" + form.sortCode.value;
+
                             fetch("toList/search?" + pars, {
                                 headers: {
                                     "Content-Type": "application/json",
                                     "Accept": "application/json"
                                 }
                             }).then((response) => {
-                                return response.json()
+                                return response.text();
                             }).then((data) => {
-                                console.log(data);
-                                let likeableSearchResult = data.data;
-                                console.log(likeableSearchResult);
-                                $("#searchForm").replaceWith(likeableSearchResult);
+                                $("#searchResultContainer").html(data);
+                                applyJdenticon();
                             });
+
+                            function applyJdenticon() {
+                                $("#searchResultContainer .jdenticon").each(function() {
+                                    const hash = $(this).attr("data-jdenticon-value");
+                                    const newSvg = jdenticon.toSvg(hash, 120);
+                                    $(this).replaceWith(newSvg);
+                                });
+                            }
                         }
                     </script>
                 </div>
             </div>
-
-            <ul th:if="${!#lists.isEmpty(likeablePeople)}" class="flex flex-col gap-4 mt-4">
-                <li th:each="likeablePerson: ${likeablePeople}">
-                    <div class="card bg-base-100 shadow-xl">
-                        <div class="card-body">
-                            <div class="mt-4 mb-2 flex flex-col gap-2">
-                                <div>
-                                    <i class="fa-regular fa-face-laugh-beam"></i>
-                                    호감표시자
-                                </div>
-                                <svg th:data-jdenticon-value="|${likeablePerson.getJdenticon()}|" width="120"
-                                     height="120"></svg>
-                            </div>
-
-                            <div class="mt-4 mb-2 flex flex-col gap-2">
-                                <div>
-                                    <i class="fa-regular fa-clock"></i>
-                                    호감표시
-                                </div>
-                                <div class="mt-2">
-                                    <span class="badge badge-primary"
-                                          th:text="${#temporals.format(likeablePerson.createDate, 'yy.MM.dd HH:mm')}"></span>
-                                </div>
-                            </div>
-
-                            <div class="mt-4 mb-2 flex flex-col gap-2">
-                                <div>
-                                    <i class="fa-solid fa-person-half-dress"></i>
-                                    성별
-                                </div>
-                                <div class="badge badge-primary"
-                                     th:data-test="|toInstaMember_genderDisplayName=${likeablePerson.getGenderDisplayName()}|"
-                                     th:utext="${likeablePerson.getGenderDisplayNameWithIcon()}"></div>
-                            </div>
-
-                            <div class="mt-4 mb-2 flex flex-col gap-2">
-                                <div>
-                                    <i class="fa-solid fa-check"></i>
-                                    호감사유
-                                </div>
-                                <div class="badge badge-primary"
-                                     th:data-test="|toInstaMember_attractiveTypeDisplayName=${likeablePerson.getAttractiveTypeDisplayName()}|"
-                                     th:utext="${likeablePerson.getGenderDisplayNameWithIcon()}"></div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+            <div class="searchResultDiv" id="searchResultContainer">
+                <!-- 기본값으로 searchResult 페이지를 포함하도록 설정 -->
+                <div th:include="usr/likeablePerson/searchResult"></div>
+            </div>
         </th:block>
 
         <div class="text-center mt-4">

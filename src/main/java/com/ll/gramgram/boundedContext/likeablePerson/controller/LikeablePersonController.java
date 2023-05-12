@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -118,14 +117,15 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList/search")
-    @ResponseBody
-    public RsData<List<LikeablePersonToListDto>> searchToList(@RequestParam(value = "gender", defaultValue = "U") String gender,
-                                                              @RequestParam(value = "attractiveTypeCode", defaultValue = "0") Integer attractiveTypeCode,
-                                                              @RequestParam(value = "sortCode", defaultValue = "1") Integer sortCode) {
+    public String searchToList(Model model,
+                               @RequestParam(value = "gender", defaultValue = "U") String gender,
+                               @RequestParam(value = "attractiveTypeCode", defaultValue = "0") Integer attractiveTypeCode,
+                               @RequestParam(value = "sortCode", defaultValue = "1") Integer sortCode) {
         InstaMember instaMember = rq.getMember().getInstaMember();
-        if (instaMember == null) return RsData.failOf(Collections.emptyList());
-
-        return RsData.successOf(likeablePersonService.searchLikeablePerson(instaMember, gender, attractiveTypeCode, sortCode));
+        if (instaMember != null) {
+            model.addAttribute("likeablePeople", likeablePersonService.searchLikeablePerson(instaMember, gender, attractiveTypeCode, sortCode));
+        }
+        return "usr/likeablePerson/searchResult";
     }
 
     @AllArgsConstructor
