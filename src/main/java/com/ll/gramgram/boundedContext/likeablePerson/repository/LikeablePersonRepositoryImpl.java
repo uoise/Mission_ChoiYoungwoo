@@ -68,8 +68,8 @@ public class LikeablePersonRepositoryImpl implements LikeablePersonRepositoryCus
     private OrderSpecifier<?> orderSelector(Integer sortCode) {
         return switch (sortCode) {
             case 2 -> likeablePerson.id.asc();
-            case 3 -> likeablePerson.fromInstaMember.toLikeablePeople.size().desc();
-            case 4 -> likeablePerson.fromInstaMember.toLikeablePeople.size().asc();
+            case 3 -> likeablePerson.fromInstaMember.likesCount.desc();
+            case 4 -> likeablePerson.fromInstaMember.likesCount.asc();
             case 5 -> likeablePerson.fromInstaMember.gender.desc();
             case 6 -> likeablePerson.attractiveTypeCode.asc();
             default -> likeablePerson.id.desc();
