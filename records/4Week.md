@@ -1,6 +1,6 @@
 # 4Week_최영우.md
 
-## Title: [3Week] 최영우
+## Title: [4Week] 최영우
 
 ### 미션 요구사항 분석 & 체크리스트
 
@@ -22,7 +22,9 @@
     - [x] temporal
     - [x] popularity
     - [x] attractiveType
-- [ ] ajax
+- [x] ajax
+  - [x] jdentication rendering
+  - [ ]  vue 활용
 ### 4주차 미션 요약
 
 ---
@@ -36,6 +38,4 @@
     - [jenkins ignore failure](https://goddessbest-qa.tistory.com/99)
 
 **[특이사항]**
-- ajax 로 요청까지는 성공
-- Response에 body가 리턴되지 않음
-- thymeleaf 에서 다시 렌더링 해야함
+- ajax 에서 html을 리턴받지 않고, vue로 수정하는 방법 활용 하는 방법 고려
