@@ -1,11 +1,21 @@
-#server:
-#  port: 443
-#  ssl:
-#    enabled: true
-#    key-store-type: PKCS12
-#    key-store-password: uoise9999
-#    key-store: keystore.p12
+server:
+  shutdown: graceful
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
 spring:
+  data:
+    redis:
+      host: 172.17.0.1
+  lifecycle:
+    timeout-per-shutdown-phase: 1m
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://172.17.0.1:3306/gram__prod?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
